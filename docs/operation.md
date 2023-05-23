@@ -94,6 +94,60 @@ sudo journalctl -u ceph-osd@0.service
 
 * [Ceph - Operating a Cluster](https://docs.ceph.com/en/quincy/rados/operations/operating/)
 
+## 管理 alert
+
+在 Ceph Dashboard 中，点击左侧导航栏的 Cluster > Monitoring，可以查看当前集群中的警告信息。
+
+
+<figure class="screenshot">
+    <img alt="alert1" src="./assets/alert1.png"/>
+</figure>
+
+
+如果确认警告信息无关紧要，您可以静默警告信息。首先在表格中点击所要静默的行，然后点击左上角的 Create Silence 按钮，填写静默时长和筛选条件等配置即可。
+
+<figure class="screenshot">
+    <img alt="alert2" src="./assets/alert2.png"/>
+</figure>
+
+
+另外，您也可以通过命令行来静默警告信息。例如，如果通过命令行查看集群状态发现有如下警告：
+
+
+```
+$ ceph health detail
+[WRN] MDS_SLOW_METADATA_IO: 1 MDSs report slow metadata IOs
+```
+
+
+您可以通过以下命令静默该警告：
+
+
+```
+ceph health mute MDS_SLOW_METADATA_IO
+```
+
+
+或在一定时间内静默警告：
+
+
+```
+ceph health mute MDS_SLOW_METADATA_IO 1h
+```
+
+
+通过以下命令取消静默：
+
+
+```
+ceph health unmute MDS_SLOW_METADATA_IO
+```
+
+
+参考文档：
+
+* [Ceph - Muting Health Checks](https://docs.ceph.com/en/latest/rados/operations/monitoring/#muting-health-checks)
+
 
 ## 查看 daemon 状态
 
