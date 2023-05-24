@@ -167,23 +167,33 @@ sudo ceph orch ls --export > cluster.yaml
 * [Ceph - Service Management](https://docs.ceph.com/en/quincy/cephadm/services/index.html)
 
 
-## 移除 daemon
+## 获取 daemon 地址
 
-通过以下命令移除某个 daemon：
-
-
-```
-sudo ceph orch daemon rm <daemon-name>
-```
-
-
-例如：
-
+为了获取某个 daemon 的地址，例如 prometheus、grafana、alert manager 等，首先通过以下命令查看 daemon 所在的节点与端口：
 
 ```
-sudo ceph orch daemon rm mgr.ds03.obymbg
+$ sudo ceph orch ps
+NAME                           HOST   PORTS        STATUS        REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
+alertmanager.host1             host1  *:9093,9094  running (5w)     4m ago   8w    54.3M        -           ba2b418f427c  10679fbf3b3d
+grafana.host1                  host1  *:3000       running (5w)     4m ago   8w     149M        -  8.3.5    dad864ee21e9  526bb2c28317
+prometheus.host1               host1  *:9095       running (5w)     4m ago   8w     213M        -           514e6a882f6e  8579c7c74cc5
 ```
 
+可以看到，prometheus、grafana、alert manager 均运行在 host1 节点上，并分别使用 9095、3000、9093 端口。
+
+通过以下命令查看 host1 节点的 ip：
+
+```
+$ sudo ​​ceph orch host ls
+HOST    ADDR          LABELS  STATUS
+host1   10.1.2.3      _admin
+```
+
+因此：
+
+* prometheus 的地址为 `http://10.1.2.3:9095`
+* grafana 的地址为 `http://10.1.2.3:3000`
+* alert manager 的地址为 `http://10.1.2.3:9093`
 
 
 ## 调整 daemon 配置
@@ -245,6 +255,24 @@ spec:
 sudo ceph orch apply -i ./rgw.yaml
 ```
 
+
+
+## 移除 daemon
+
+通过以下命令移除某个 daemon：
+
+
+```
+sudo ceph orch daemon rm <daemon-name>
+```
+
+
+例如：
+
+
+```
+sudo ceph orch daemon rm mgr.ds03.obymbg
+```
 
 
 ## 查看 mon ip
@@ -916,7 +944,7 @@ sudo ceph config set osd osd_max_backfills 8
 ```
 sudo apt update
 sudo apt install ceph-deploy -y
-sudo ceph-deploy purge ds04
+sudo ceph-deploy purge <hostname>
 sudo rm -rf /var/lib/ceph/*
 ```
 

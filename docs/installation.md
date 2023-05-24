@@ -599,9 +599,9 @@ sudo ceph time-sync-status
 
 ## 配置警告通知
 
-Ceph 自带一整套监控系统，包括 prometheus/grafana/alert mamanger。alert manager 的配置文件位于 `/var/lib/ceph/<cluster-id>/alertmanager.<hostname>/etc/alertmanager`
+Ceph 自带一整套监控系统，包括 prometheus/grafana/alert mamanger。为了能够及时收到 alert manager 发出的警告，您可以配置 alert manager 通过[邮箱](https://prometheus.io/docs/alerting/latest/configuration/#email_config)和[企业微信](https://prometheus.io/docs/alerting/latest/configuration/#wechat_config)来发送警告信息。
 
-通过 SSH 登录 alert manager 所在的节点，将位于上述路径的 alertmanager.yml 修改为如下内容（注意替换其中的 `<hostname> <password> <secret>` 及其他具体配置）：
+通过 SSH 登录 alert manager 所在的节点，将位于 `/var/lib/ceph/&lt;cluster-id>/alertmanager.&lt;hostname>/etc/alertmanager` 的配置文件 alertmanager.yml 修改为如下内容（注意替换其中邮箱和企业微信相关的具体配置）：
 
 
 ```
@@ -633,7 +633,7 @@ route:
       group_wait: 10s
       group_interval: 5m
       repeat_interval: 12h
-      receiver: 't9k-monitoring/wechat/ibmc-alerts'
+      receiver: 't9k-monitoring/wechat/alerts'
       continue: true
 
 receivers:
@@ -642,18 +642,18 @@ receivers:
   - url: 'http://<hostname>:8080/api/prometheus_receiver'
 - name: t9k-monitoring/email/t9k-sre
   email_configs:
-  - to: eng-alerts@tensorstack.com
-    from: alert-manager@mail.net.tensorstack.com
-    smarthost: smtp.eu.mailgun.org:587
-    auth_username: eng-alerts@mail.net.tensorstack.com
-    auth_password: <password>
+  - to: <to>
+    from: <from>
+    smarthost: <smarthost>
+    auth_username: <auth_username>
+    auth_password: <auth_password>
     headers:
       Subject: '{{ template "email.subject" . }}'
-- name: t9k-monitoring/wechat/ibmc-alerts
+- name: t9k-monitoring/wechat/alerts
   wechat_configs:
-  - api_secret: <secret>
-    corp_id: ww8de0e52fb6a5a8ae
-    agent_id: "1000007"
+  - api_secret: <api_secret>
+    corp_id: <corp_id>
+    agent_id: <agent_id>
     to_user: '@all'
     message: '{{ template "wechat.message" . }}'
 templates:
