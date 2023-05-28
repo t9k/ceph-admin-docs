@@ -314,11 +314,23 @@ csi-cephfsplugin-vql6n   3/3     Running   0          3d1h   100.64.4.132   kyli
 ```
 
 
-最后，通过以下命令查看该  Ceph CSI Plugin Pod 的日志：
+最后，通过以下命令查看该 Ceph CSI Plugin Pod 的日志：
 
 
 ```
 kubectl logs -n cephfs csi-cephfsplugin-mxjh2 csi-cephfsplugin
+```
+
+如果仍然无法找到问题原因，可尝试重启该 Ceph CSI Plugin Pod：
+
+```
+kubectl delete -n cephfs csi-cephfsplugin-mxjh2
+```
+
+如果上述删除命令卡住，可通过以下命令强行删除该 Ceph CSI Plugin Pod：
+
+```
+kubectl delete -n cephfs csi-cephfsplugin-mxjh2 --force
 ```
 
 
