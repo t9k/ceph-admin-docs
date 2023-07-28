@@ -7,7 +7,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard1" src="./assets/dashboard1.png"/>
+    <img alt="dashboard1" src="./assets/operations/dashboard1.png"/>
 </figure>
 
 
@@ -16,7 +16,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard2" src="./assets/dashboard2.png"/>
+    <img alt="dashboard2" src="./assets/operations/dashboard2.png"/>
 </figure>
 
 
@@ -24,7 +24,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard3" src="./assets/dashboard3.png"/>
+    <img alt="dashboard3" src="./assets/operations/dashboard3.png"/>
 </figure>
 
 
@@ -32,7 +32,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard4" src="./assets/dashboard4.png"/>
+    <img alt="dashboard4" src="./assets/operations/dashboard4.png"/>
 </figure>
 
 
@@ -41,7 +41,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard5" src="./assets/dashboard5.png"/>
+    <img alt="dashboard5" src="./assets/operations/dashboard5.png"/>
 </figure>
 
 
@@ -100,14 +100,14 @@ sudo journalctl -u ceph-osd@0.service
 
 
 <figure class="screenshot">
-    <img alt="alert1" src="./assets/alert1.png"/>
+    <img alt="alert1" src="./assets/operations/alert1.png"/>
 </figure>
 
 
 如果确认警告信息无关紧要，您可以静默警告信息。首先在表格中点击所要静默的行，然后点击左上角的 Create Silence 按钮，填写静默时长和筛选条件等配置即可。
 
 <figure class="screenshot">
-    <img alt="alert2" src="./assets/alert2.png"/>
+    <img alt="alert2" src="./assets/operations/alert2.png"/>
 </figure>
 
 
@@ -275,6 +275,29 @@ sudo ceph orch daemon rm mgr.ds03.obymbg
 ```
 
 
+## 移除 service
+
+通过以下命令移除某个 service：
+
+
+```
+sudo ceph orch rm <service-name>
+```
+
+
+例如：
+
+
+```
+sudo ceph orch rm mds.k8s
+```
+
+
+参考文档：
+
+* [Ceph - Removing a Service](https://docs.ceph.com/en/quincy/cephadm/services/#removing-a-service)
+
+
 ## 查看 mon ip
 
 通过以下命令查看 mon ip：
@@ -298,7 +321,7 @@ sudo ceph orch apply mon --unmanaged
 ```
 
 
-然后手动创建 mon： \
+然后手动创建 mon：
 
 
 
@@ -354,6 +377,10 @@ sudo ceph crash archive-all
 sudo ceph orch host ls
 ```
 
+
+## 添加节点
+
+见[集群安装 - 添加节点](./installation.md#添加节点)。
 
 
 ## 重启节点
@@ -439,6 +466,10 @@ sudo ceph orch device ls
 sudo ceph osd status
 ```
 
+
+## 添加存储设备
+
+见[集群安装 - 添加存储设备](./installation.md#添加存储设备)。
 
 
 ## 检查存储设备
@@ -672,8 +703,7 @@ sudo ceph fs fail <fs-name>
 ```
 
 
- \
-然后确认删除该 cephfs： \
+然后确认删除该 cephfs：
 
 
 
@@ -772,6 +802,13 @@ sudo ceph osd dump
 
 ## 查看 pg
 
+查看所有 pg 情况：
+
+```
+sudo ceph pg dump
+```
+
+
 查看某个 pool 中的所有 pg：
 
 
@@ -809,6 +846,33 @@ sudo ceph pg <pg-id> query
 * [Ceph - Monitoring OSDs and PGs](https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/)
 
 
+## 调整 pg 数量
+
+一般情况下，建议通过以下命令禁用 pg autoscaling，以便集群正常运行：
+
+```
+sudo ceph config set osd osd_pool_default_pg_autoscale_mode off
+```
+
+禁用 pg autoscaling 后，通过以下命令设置每个 pool 的 pg 数量：
+
+```
+sudo ceph osd pool set <pool-name> pg_num <num>
+sudo ceph osd pool set <pool-name> pgp_num <num>
+```
+
+例如：
+
+```
+sudo ceph osd pool set default.rgw.buckets.data pg_num 256
+sudo ceph osd pool set default.rgw.buckets.data pgp_num 256
+```
+
+
+根据 [Red Hat 文档](https://access.redhat.com/documentation/zh-cn/red_hat_ceph_storage/3/html/storage_strategies_guide/placement_groups_pgs#pg_count)，推荐每个 osd 约 100~200 个 pg。
+
+
+
 ## 修复 pg
 
 当集群的存储策略发生变化时，数据在重新平衡的过程中，pg 可能卡住，可尝试以下方式修复 pg：
@@ -822,6 +886,40 @@ sudo ceph pg force-recovery <pg-id>
 sudo ceph pg repeer <pg-id>
 ```
 
+## 手动 scrub / deep scrub
+
+scrub 是指 Ceph 对 pg 中的数据进行一致性验证，通常每天进行一次。
+
+deep scrub 是一种更深层次的 scrub，会读取数据的每个 bit 并计算 checksum，通常每周进行一次。
+
+
+对某个 pg 进行 scrub / deep scrub：
+
+```
+sudo ceph pg scrub <pg-id>
+sudo ceph pg deep-scrub <pg-id>
+```
+
+
+对某个 osd 上的所有 pg 进行 scrub / deep scrub：
+
+```
+sudo ceph osd scrub <osd-id>
+sudo ceph osd deep-scrub <osd-id>
+```
+
+
+对某个 pool 中的所有 pg 进行 scrub / deep scrub：
+
+```
+sudo ceph osd pool scrub <pool-name>
+sudo ceph osd pool deep-scrub <pool-name>
+```
+
+
+参考文档：
+
+* [Ceph - Scrub a PG](https://docs.ceph.com/en/latest/rados/operations/placement-groups/#scrub-a-pg)
 
 
 ## 修改集群配置

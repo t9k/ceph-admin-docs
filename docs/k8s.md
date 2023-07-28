@@ -147,7 +147,7 @@ kubectl get pod -w
 * 对于 Ceph 集群，我们需要创建两个不同的 Ceph Filesystem 及对应的用户
 * 对于 K8s 集群，我们需要创建两个不同的命名空间，并对 Storage Class、ClusterRole、ClusterRoleBinding 等集群级别资源使用不同的名称
 
-为了方便部署，我们提供了 Helm Chart（点击[此处](./assets/cephcsi-helmchart.zip)下载），您只需要在 values.yaml 中填写参数即可。
+为了方便部署，我们提供了 Helm Chart（点击[此处](./assets/k8s/cephcsi-helmchart.zip)下载），您只需要在 values.yaml 中填写参数即可。
 
 
 values.yaml 示例如下：
@@ -337,7 +337,7 @@ kubectl delete -n cephfs csi-cephfsplugin-mxjh2 --force
 
 ## PVC 备份
 
-为了支持 PVC 备份，首先需要按照 [Enable Volume Snapshot in K8s](./appendix.md#enable-volume-snapshot-in-k8s) 在 K8s 集群中启用 Volume Snapshot 功能；其次，需要针对不同的 PVC Provisioner 创建 [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/)。
+为了支持 PVC 备份，首先需要[在 K8s 中启用 Volume Snapshot 功能](#在-k8s-中启用-volume-snapshot-功能)；其次，需要针对不同的 PVC Provisioner 创建 [VolumeSnapshotClass](https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/)。
 
 Ceph CSI 提供了对应的 VolumeSnapshotClass 资源，其 YAML 如下（[来源](https://github.com/ceph/ceph-csi/blob/devel/examples/cephfs/snapshotclass.yaml)）：
 
@@ -449,6 +449,32 @@ kubectl exec -it cephfs-restore-demo-pod -- /bin/bash
 ls /var/lib/www
 ```
 
+### 在 K8s 中启用 Volume Snapshot 功能
+
+根据[官方博客](https://kubernetes.io/blog/2020/12/10/kubernetes-1.20-volume-snapshot-moves-to-ga/)，Volume Snapshot 特性从 K8s 1.20 版本开始 GA。
+
+通过以下命令查看 K8s 版本：
+
+```
+kubectl version
+```
+
+通过以下命令查看 K8s 中是否已经安装 Volume Snapshot 相关组件：
+
+```
+kubectl get deploy -n kube-system snapshot-controller
+kubectl api-resouces | grep volumesnapshot
+```
+
+如果尚未安装，可以根据[官方文档](https://github.com/kubernetes-csi/external-snapshotter#usage)，手动安装 CRD、controller、webhook 等组件：
+
+
+```
+git clone https://github.com/kubernetes-csi/external-snapshotter.git
+cd external-snapshotter
+kubectl kustomize client/config/crd | kubectl create -f -
+kubectl -n kube-system kustomize deploy/kubernetes/snapshot-controller | kubectl create -f -
+```
 
 
 ## 配额管理

@@ -90,8 +90,9 @@ sudo ceph orch host add host1 10.1.2.3  --labels _admin
 ```
 curl --silent --remote-name --location https://github.com/ceph/ceph/raw/quincy/src/cephadm/cephadm
 chmod +x cephadm
-sudo ./cephadm add-repo --release quincy
-sudo ./cephadm install ceph-common
+sudo ./cephadm add-repo --release quincy --repo-url https://mirrors.aliyun.com/ceph # speed up using aliyun mirror
+sudo apt update
+sudo ./cephadm install ceph-common ceph
 ```
 
 
@@ -324,7 +325,7 @@ sudo ceph dashboard ac-user-set-password admin -i <file-containing-password>
 ```
 
 
-参考[查看 daemon 状态](./operation.md#查看-daemon-状态)，找到 mgr daemon 所在的节点，dashboard 的地址即为 `http://<mgr-host-ip>:8080`。
+参考[查看 daemon 状态](./operations.md#查看-daemon-状态)，找到 mgr daemon 所在的节点，dashboard 的地址即为 `http://<mgr-host-ip>:8080`。
 
 为了配置 grafana 使用 http，通过 SSH 登录 grafana 所在的节点，修改 grafana 的配置文件，将 https 改为 http，然后重启 grafana 容器：
 
@@ -357,6 +358,12 @@ sudo ceph dashboard set-prometheus-api-ssl-verify false
 ## 配置 crushmap
 
 Ceph 的默认存储策略是在不同的节点之间将数据复制 3 份，以提供高可用性。如果我们只有少于 3 个节点，根据[这个博客](https://balderscape.medium.com/setting-up-a-virtual-single-node-ceph-storage-cluster-d86d6a6c658e)，需要配置 Ceph 在 OSD 之间复制数据。
+
+
+!!! note "注意"
+
+    在多于 3 个节点的生产集群中，推荐配置仍然是在节点之间复制数据，以避免一个节点故障导致某些数据的永久丢失。
+
 
 查看当前的 crushmap：
 
@@ -770,8 +777,8 @@ sudo ceph osd erasure-code-profile get ecprofile-k4-m2
 
 ```
 sudo ceph osd pool create ecpool-k4-m2 erasure ecprofile-k4-m2
-sudo ceph osd pool set ecpool allow_ec_overwrites true
-sudo ceph osd pool application enable ecpool cephfs
+sudo ceph osd pool set ecpool-k4-m2 allow_ec_overwrites true
+sudo ceph osd pool application enable ecpool-k4-m2 cephfs
 ```
 
 
