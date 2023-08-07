@@ -1,0 +1,1653 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="TensorStack Authors">
+      
+      
+        <link rel="canonical" href="https://t9k.github.io/ceph-admin-docs/operations.html">
+      
+      
+        <link rel="prev" href="installation.html">
+      
+      
+        <link rel="next" href="k8s.html">
+      
+      <link rel="icon" href="assets/icon.svg">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+    
+    
+      
+        <title>集群运维 - Ceph 管理员手册</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.eebd395e.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#集群运维" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="index.html" title="Ceph 管理员手册" class="md-header__button md-logo" aria-label="Ceph 管理员手册" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ceph 管理员手册
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              集群运维
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/t9k/ceph-admin-docs" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    t9k/ceph-admin-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="index.html" class="md-tabs__link">
+      首页
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="concepts.html" class="md-tabs__link">
+      基本概念
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="installation.html" class="md-tabs__link">
+      集群安装
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  <li class="md-tabs__item">
+    <a href="operations.html" class="md-tabs__link md-tabs__link--active">
+      集群运维
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="k8s.html" class="md-tabs__link">
+      K8s 集成
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="s3.html" class="md-tabs__link">
+      S3 集成
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="troubleshooting.html" class="md-tabs__link">
+      常见故障
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Ceph 管理员手册" class="md-nav__button md-logo" aria-label="Ceph 管理员手册" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    Ceph 管理员手册
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/t9k/ceph-admin-docs" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    t9k/ceph-admin-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        首页
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="concepts.html" class="md-nav__link">
+        基本概念
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation.html" class="md-nav__link">
+        集群安装
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          集群运维
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="operations.html" class="md-nav__link md-nav__link--active">
+        集群运维
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#查看集群状态" class="md-nav__link">
+    查看集群状态
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#管理-alert" class="md-nav__link">
+    管理 alert
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-daemon-状态" class="md-nav__link">
+    查看 daemon 状态
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#获取-daemon-地址" class="md-nav__link">
+    获取 daemon 地址
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调整-daemon-配置" class="md-nav__link">
+    调整 daemon 配置
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除-daemon" class="md-nav__link">
+    移除 daemon
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除-service" class="md-nav__link">
+    移除 service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-mon-ip" class="md-nav__link">
+    查看 mon ip
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#创建-mon" class="md-nav__link">
+    创建 mon
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-crash-历史" class="md-nav__link">
+    查看 crash 历史
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看节点" class="md-nav__link">
+    查看节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加节点" class="md-nav__link">
+    添加节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#重启节点" class="md-nav__link">
+    重启节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除节点" class="md-nav__link">
+    移除节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看存储设备" class="md-nav__link">
+    查看存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加存储设备" class="md-nav__link">
+    添加存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#检查存储设备" class="md-nav__link">
+    检查存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除存储设备" class="md-nav__link">
+    移除存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#存储设备故障恢复" class="md-nav__link">
+    存储设备故障恢复
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看存储空间" class="md-nav__link">
+    查看存储空间
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#重启-mgr" class="md-nav__link">
+    重启 mgr
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-crushmap" class="md-nav__link">
+    配置 crushmap
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-pool" class="md-nav__link">
+    查看 pool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#删除-pool" class="md-nav__link">
+    删除 pool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-pool" class="md-nav__link">
+    配置 pool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-cephfs" class="md-nav__link">
+    查看 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#删除-cephfs" class="md-nav__link">
+    删除 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#挂载-cephfs" class="md-nav__link">
+    挂载 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-cephfs" class="md-nav__link">
+    配置 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-osd" class="md-nav__link">
+    查看 osd
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-pg" class="md-nav__link">
+    查看 pg
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调整-pg-数量" class="md-nav__link">
+    调整 pg 数量
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#修复-pg" class="md-nav__link">
+    修复 pg
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#手动-scrub--deep-scrub" class="md-nav__link">
+    手动 scrub / deep scrub
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#修改集群配置" class="md-nav__link">
+    修改集群配置
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调整数据平衡速度" class="md-nav__link">
+    调整数据平衡速度
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#删除集群" class="md-nav__link">
+    删除集群
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="k8s.html" class="md-nav__link">
+        K8s 集成
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="s3.html" class="md-nav__link">
+        S3 集成
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        常见故障
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#查看集群状态" class="md-nav__link">
+    查看集群状态
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#管理-alert" class="md-nav__link">
+    管理 alert
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-daemon-状态" class="md-nav__link">
+    查看 daemon 状态
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#获取-daemon-地址" class="md-nav__link">
+    获取 daemon 地址
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调整-daemon-配置" class="md-nav__link">
+    调整 daemon 配置
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除-daemon" class="md-nav__link">
+    移除 daemon
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除-service" class="md-nav__link">
+    移除 service
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-mon-ip" class="md-nav__link">
+    查看 mon ip
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#创建-mon" class="md-nav__link">
+    创建 mon
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-crash-历史" class="md-nav__link">
+    查看 crash 历史
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看节点" class="md-nav__link">
+    查看节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加节点" class="md-nav__link">
+    添加节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#重启节点" class="md-nav__link">
+    重启节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除节点" class="md-nav__link">
+    移除节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看存储设备" class="md-nav__link">
+    查看存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加存储设备" class="md-nav__link">
+    添加存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#检查存储设备" class="md-nav__link">
+    检查存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#移除存储设备" class="md-nav__link">
+    移除存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#存储设备故障恢复" class="md-nav__link">
+    存储设备故障恢复
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看存储空间" class="md-nav__link">
+    查看存储空间
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#重启-mgr" class="md-nav__link">
+    重启 mgr
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-crushmap" class="md-nav__link">
+    配置 crushmap
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-pool" class="md-nav__link">
+    查看 pool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#删除-pool" class="md-nav__link">
+    删除 pool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-pool" class="md-nav__link">
+    配置 pool
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-cephfs" class="md-nav__link">
+    查看 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#删除-cephfs" class="md-nav__link">
+    删除 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#挂载-cephfs" class="md-nav__link">
+    挂载 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-cephfs" class="md-nav__link">
+    配置 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-osd" class="md-nav__link">
+    查看 osd
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-pg" class="md-nav__link">
+    查看 pg
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调整-pg-数量" class="md-nav__link">
+    调整 pg 数量
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#修复-pg" class="md-nav__link">
+    修复 pg
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#手动-scrub--deep-scrub" class="md-nav__link">
+    手动 scrub / deep scrub
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#修改集群配置" class="md-nav__link">
+    修改集群配置
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#调整数据平衡速度" class="md-nav__link">
+    调整数据平衡速度
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#删除集群" class="md-nav__link">
+    删除集群
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="集群运维">集群运维<a class="headerlink" href="#集群运维" title="Permanent link">&para;</a></h1>
+<h2 id="查看集群状态">查看集群状态<a class="headerlink" href="#查看集群状态" title="Permanent link">&para;</a></h2>
+<p>Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首先，使用管理员的用户名和密码登录 Ceph Web UI。</p>
+<figure class="screenshot">
+    <img alt="dashboard1" src="./assets/operations/dashboard1.png" class="screenshot"/>
+</figure>
+
+<p>点击左侧导航栏的 Dashboard，查看集群状态总览。</p>
+<figure class="screenshot">
+    <img alt="dashboard2" src="./assets/operations/dashboard2.png" class="screenshot"/>
+</figure>
+
+<p>点击左侧导航栏的 Cluster &gt; OSDs，查看各个磁盘的使用情况。</p>
+<figure class="screenshot">
+    <img alt="dashboard3" src="./assets/operations/dashboard3.png" class="screenshot"/>
+</figure>
+
+<p>点击左侧导航栏的 Cluster &gt; OSDs，然后点击上侧的 Overall Performance，查看磁盘使用情况的可视化统计数据。</p>
+<figure class="screenshot">
+    <img alt="dashboard4" src="./assets/operations/dashboard4.png" class="screenshot"/>
+</figure>
+
+<p>点击左侧导航栏的 Cluster &gt; Logs，查看集群日志。</p>
+<figure class="screenshot">
+    <img alt="dashboard5" src="./assets/operations/dashboard5.png" class="screenshot"/>
+</figure>
+
+<p>另外，您也可以通过 SSH 登录 Ceph 集群的<strong>管理节点</strong>，使用命令行来查看。</p>
+<div class="admonition info">
+<p class="admonition-title">什么是管理节点</p>
+<p>添加了 _admin 标签的节点是管理节点，拥有管理整个集群的权限。通过以下命令将一个节点设为管理节点：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch host add &lt;host-name&gt; &lt;host-ip&gt; --labels _admin
+</code></pre></div>
+</div>
+<p>查看集群状态总览：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph status
+sudo ceph -s
+sudo ceph health detail
+</code></pre></div>
+<p>查看<strong>本节点</strong>上运行的各项服务状态：</p>
+<div class="highlight"><pre><span></span><code>sudo systemctl status ceph\*.service ceph\*.target
+</code></pre></div>
+<p>查看<strong>本节点</strong>上运行的某项服务的详细日志：</p>
+<div class="highlight"><pre><span></span><code>sudo journalctl -u &lt;service-name&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo journalctl -u ceph-osd@0.service
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/rados/operations/operating/">Ceph - Operating a Cluster</a></li>
+</ul>
+<h2 id="管理-alert">管理 alert<a class="headerlink" href="#管理-alert" title="Permanent link">&para;</a></h2>
+<p>在 Ceph Dashboard 中，点击左侧导航栏的 Cluster &gt; Monitoring，可以查看当前集群中的警告信息。</p>
+<figure class="screenshot">
+    <img alt="alert1" src="./assets/operations/alert1.png" class="screenshot"/>
+</figure>
+
+<p>如果确认警告信息无关紧要，您可以静默警告信息。首先在表格中点击所要静默的行，然后点击左上角的 Create Silence 按钮，填写静默时长和筛选条件等配置即可。</p>
+<figure class="screenshot">
+    <img alt="alert2" src="./assets/operations/alert2.png" class="screenshot"/>
+</figure>
+
+<p>另外，您也可以通过命令行来静默警告信息。例如，如果通过命令行查看集群状态发现有如下警告：</p>
+<div class="highlight"><pre><span></span><code>$ ceph health detail
+[WRN] MDS_SLOW_METADATA_IO: 1 MDSs report slow metadata IOs
+</code></pre></div>
+<p>您可以通过以下命令静默该警告：</p>
+<div class="highlight"><pre><span></span><code>ceph health mute MDS_SLOW_METADATA_IO
+</code></pre></div>
+<p>或在一定时间内静默警告：</p>
+<div class="highlight"><pre><span></span><code>ceph health mute MDS_SLOW_METADATA_IO 1h
+</code></pre></div>
+<p>通过以下命令取消静默：</p>
+<div class="highlight"><pre><span></span><code>ceph health unmute MDS_SLOW_METADATA_IO
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/monitoring/#muting-health-checks">Ceph - Muting Health Checks</a></li>
+</ul>
+<h2 id="查看-daemon-状态">查看 daemon 状态<a class="headerlink" href="#查看-daemon-状态" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看集群中运行的所有 daemon：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch ls
+
+sudo ceph orch ps 
+
+sudo ceph orch ls --export &gt; cluster.yaml
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/services/index.html">Ceph - Service Management</a></li>
+</ul>
+<h2 id="获取-daemon-地址">获取 daemon 地址<a class="headerlink" href="#获取-daemon-地址" title="Permanent link">&para;</a></h2>
+<p>为了获取某个 daemon 的地址，例如 prometheus、grafana、alert manager 等，首先通过以下命令查看 daemon 所在的节点与端口：</p>
+<div class="highlight"><pre><span></span><code>$ sudo ceph orch ps
+NAME                           HOST   PORTS        STATUS        REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID
+alertmanager.host1             host1  *:9093,9094  running (5w)     4m ago   8w    54.3M        -           ba2b418f427c  10679fbf3b3d
+grafana.host1                  host1  *:3000       running (5w)     4m ago   8w     149M        -  8.3.5    dad864ee21e9  526bb2c28317
+prometheus.host1               host1  *:9095       running (5w)     4m ago   8w     213M        -           514e6a882f6e  8579c7c74cc5
+</code></pre></div>
+<p>可以看到，prometheus、grafana、alert manager 均运行在 host1 节点上，并分别使用 9095、3000、9093 端口。</p>
+<p>通过以下命令查看 host1 节点的 ip：</p>
+<div class="highlight"><pre><span></span><code>$ sudo ​​ceph orch host ls
+HOST    ADDR          LABELS  STATUS
+host1   10.1.2.3      _admin
+</code></pre></div>
+<p>因此：</p>
+<ul>
+<li>prometheus 的地址为 <code>http://10.1.2.3:9095</code></li>
+<li>grafana 的地址为 <code>http://10.1.2.3:3000</code></li>
+<li>alert manager 的地址为 <code>http://10.1.2.3:9093</code></li>
+</ul>
+<h2 id="调整-daemon-配置">调整 daemon 配置<a class="headerlink" href="#调整-daemon-配置" title="Permanent link">&para;</a></h2>
+<p>Ceph 支持以 yaml 配置文件的形式指定 daemon 的详细 spec。</p>
+<p>以 rgw daemon 为例，导出配置文件：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch ls --service_type rgw --export &gt; rgw.yaml
+</code></pre></div>
+<p>rgw.yaml 示例如下：</p>
+<div class="highlight"><pre><span></span><code>service_type: rgw
+service_id: cephs3
+service_name: rgw.cephs3
+placement:
+  hosts:
+  - host1
+</code></pre></div>
+<p>修改 rgw.yaml 为以下内容：</p>
+<div class="highlight"><pre><span></span><code>service_type: rgw
+service_id: cephs3
+service_name: rgw.cephs3
+placement:
+  count: 2
+  hosts:
+  - host1
+  - host2
+networks:
+- 172.0.0.0/24
+spec:
+  rgw_frontend_port: 8081
+</code></pre></div>
+<p>其中：</p>
+<ul>
+<li>配置 rgw daemon 为 2 个，host1 节点、host2 节点各一个</li>
+<li>配置 rgw daemon 使用 172.0.0.0/24 网络</li>
+<li>配置 rgw daemon 使用 8081 端口</li>
+</ul>
+<p>应用该配置文件：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch apply -i ./rgw.yaml
+</code></pre></div>
+<h2 id="移除-daemon">移除 daemon<a class="headerlink" href="#移除-daemon" title="Permanent link">&para;</a></h2>
+<p>通过以下命令移除某个 daemon：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch daemon rm &lt;daemon-name&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch daemon rm mgr.ds03.obymbg
+</code></pre></div>
+<h2 id="移除-service">移除 service<a class="headerlink" href="#移除-service" title="Permanent link">&para;</a></h2>
+<p>通过以下命令移除某个 service：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch rm &lt;service-name&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch rm mds.k8s
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/services/#removing-a-service">Ceph - Removing a Service</a></li>
+</ul>
+<h2 id="查看-mon-ip">查看 mon ip<a class="headerlink" href="#查看-mon-ip" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看 mon ip：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph mon dump
+</code></pre></div>
+<h2 id="创建-mon">创建 mon<a class="headerlink" href="#创建-mon" title="Permanent link">&para;</a></h2>
+<p>默认情况下，Ceph 集群自动管理 mon daemon，一般在 5 个不同的节点上部署 5 个 daemon，占用节点的 3300 和 6789 端口。</p>
+<p>如果需要手动管理 mon，首先执行以下命令：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch apply mon --unmanaged
+</code></pre></div>
+<p>然后手动创建 mon：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch daemon add mon --placement=&quot;myhost:[v2:1.2.3.4:3300,v1:1.2.3.4:6789]=name&quot;
+</code></pre></div>
+<p>其中，<code>[v2:1.2.3.4:3300,v1:1.2.3.4:6789]</code> 是 mon 的网络地址，<code>=name</code> 用于指定所创建的 mon 名称。</p>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/services/mon/">Ceph - MON Service</a></li>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/services/index.html#explicit-placements">Ceph - Explicit Placements</a></li>
+</ul>
+<h2 id="查看-crash-历史">查看 crash 历史<a class="headerlink" href="#查看-crash-历史" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看集群中曾经发生过的 crash 事件：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph crash ls
+</code></pre></div>
+<p>查看某个 crash 事件的详细信息：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph crash info &lt;crash-id&gt;
+</code></pre></div>
+<p>将 crash 事件归档，以免出现在 ceph status 的输出中：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph crash archive-all
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/mgr/crash/">Ceph - Crash Module</a></li>
+</ul>
+<h2 id="查看节点">查看节点<a class="headerlink" href="#查看节点" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看集群中的所有节点：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch host ls
+</code></pre></div>
+<h2 id="添加节点">添加节点<a class="headerlink" href="#添加节点" title="Permanent link">&para;</a></h2>
+<p>见<a href="installation.html#添加节点">集群安装 - 添加节点</a>。</p>
+<h2 id="重启节点">重启节点<a class="headerlink" href="#重启节点" title="Permanent link">&para;</a></h2>
+<p>通过 SSH 登录 Ceph 集群的任意一个节点，可执行以下命令重启<strong>本节点</strong>上的 Ceph 服务：</p>
+<div class="highlight"><pre><span></span><code>sudo systemctl stop ceph\*.service ceph\*.target
+sudo systemctl start ceph.target 
+</code></pre></div>
+<h2 id="移除节点">移除节点<a class="headerlink" href="#移除节点" title="Permanent link">&para;</a></h2>
+<p>假设将被移除的节点名称为 host1，以下命令均需要在 Ceph 集群的<strong>其他管理节点</strong>上运行。</p>
+<p>运行以下命令移除 host1：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch host ls   
+sudo ceph orch host drain host1
+sudo ceph mon remove host1
+</code></pre></div>
+<p>观察 OSD 的移除情况，直到其报告 “No OSD remove/replace operations reported”：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch osd rm status
+</code></pre></div>
+<p>观察 Daemon 的移除情况（这可能会需要较长的时间），直到其报告 “No daemons reported”：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch ps host1
+</code></pre></div>
+<p>所有 Daemon 都被移除后才能通过以下命令删除节点 host1：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch host rm host1
+sudo ceph orch host ls
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/host-management/#removing-hosts">Ceph - Removing Hosts</a> </li>
+</ul>
+<h2 id="查看存储设备">查看存储设备<a class="headerlink" href="#查看存储设备" title="Permanent link">&para;</a></h2>
+<p>查看节点上的所有存储设备：</p>
+<div class="highlight"><pre><span></span><code>lsblk
+</code></pre></div>
+<p>查看集群中 Ceph 能看到的所有存储设备：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch device ls
+</code></pre></div>
+<p>查看集群中运行的所有 OSD：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd status
+</code></pre></div>
+<h2 id="添加存储设备">添加存储设备<a class="headerlink" href="#添加存储设备" title="Permanent link">&para;</a></h2>
+<p>见<a href="installation.html#添加存储设备">集群安装 - 添加存储设备</a>。</p>
+<h2 id="检查存储设备">检查存储设备<a class="headerlink" href="#检查存储设备" title="Permanent link">&para;</a></h2>
+<p>如果某个存储设备出现异常，读写速度较慢，可通过以下命令检查：</p>
+<div class="highlight"><pre><span></span><code>hdparm -Tt &lt;device-path&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>hdparm -Tt /dev/sdb
+</code></pre></div>
+<h2 id="移除存储设备">移除存储设备<a class="headerlink" href="#移除存储设备" title="Permanent link">&para;</a></h2>
+<p>假设将被移除的磁盘上运行的 OSD 编号为 0（可通过 Web UI 或 sudo ceph osd status 命令获取）。</p>
+<p>在磁盘所属节点上运行以下命令移除 OSD，并自动化地将该磁盘中存储的数据移动到其他磁盘中：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch osd rm 0
+</code></pre></div>
+<p>通过以下命令查看 OSD 移除进展：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch osd rm status
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/services/osd/#remove-an-osd">Ceph - Remove an OSD</a> </li>
+</ul>
+<h2 id="存储设备故障恢复">存储设备故障恢复<a class="headerlink" href="#存储设备故障恢复" title="Permanent link">&para;</a></h2>
+<p>如果某个存储设备发生故障，其中的数据无法读取，该存储设备对应的 OSD Daemon 在一段时间后会自动发现故障并显示在集群状态总览中。此时，管理员应当按照<a href="#移除存储设备">移除存储设备</a>一节中的步骤移除故障设备，并将其从物理机器中拔出。</p>
+<p>由于 Ceph 使用了冗余存储机制，一个存储设备的损坏并不会造成数据的丢失，Ceph 将自动恢复损坏的数据。一个 Ceph 集群具体能够容忍的存储设备损坏数量根据配置的不同有所区别，详见 <a href="installation.html#配置-erasure-code">Erasure Code</a> 一节。</p>
+<h2 id="查看存储空间">查看存储空间<a class="headerlink" href="#查看存储空间" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看存储空间的整体使用情况：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph df
+</code></pre></div>
+<p>通过以下命令查看每个 osd 的存储空间使用情况：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd df
+</code></pre></div>
+<h2 id="重启-mgr">重启 mgr<a class="headerlink" href="#重启-mgr" title="Permanent link">&para;</a></h2>
+<p>mgr 负责集群的外围监控和管理，dashboard 即为 mgr 的一个组件。如果 dashboard 无法访问，可以尝试重启 mgr。</p>
+<p>通过以下命令将当前正在运行的 mgr daemon 标记为失败，ceph 会自动重启该 daemon 并启用候补 daemon：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph mgr fail
+</code></pre></div>
+<h2 id="配置-crushmap">配置 crushmap<a class="headerlink" href="#配置-crushmap" title="Permanent link">&para;</a></h2>
+<p>crushmap 用于指定数据如何存放到存储设备中，例如仅使用 hdd、仅使用 ssd、以 replicate 的形式、以 erasure code 的形式。</p>
+<p>首先导出  crushmap：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd getcrushmap -o comp_crush_map.cm
+crushtool -d comp_crush_map.cm -o crush_map.cm
+</code></pre></div>
+<p>查看 crushmap：</p>
+<div class="highlight"><pre><span></span><code>$ cat crush_map.cm
+
+...
+# rules
+rule replicated_hdd {
+    id 0
+    type replicated
+    step take default class hdd
+    step chooseleaf firstn 0 type osd
+    step emit
+}
+rule replicated_ssd {
+    id 1
+    type replicated
+    step take default class ssd
+    step chooseleaf firstn 0 type osd
+    step emit
+}
+rule ecpool-k4-m2 {
+    id 2
+    type erasure
+    step set_chooseleaf_tries 5
+    step set_choose_tries 100
+    step take default class ssd
+    step choose indep 0 type osd
+    step emit
+}
+</code></pre></div>
+<p>从上述 crushmap 示例可以看出：</p>
+<ul>
+<li><code>type replicated</code> 表示 crush rule 是 replicate 类型</li>
+<li><code>type erasure</code> 表示 crush rule 是 erasure code 类型</li>
+<li><code>step take default class hdd</code> 表示 crush rule 仅使用 hdd</li>
+<li><code>step take default class ssd</code> 表示 crush rule 仅使用 ssd</li>
+<li><code>step chooseleaf firstn 0 type osd</code> 表示 crush rule 在不同的 osd 中存储数据的多个备份</li>
+</ul>
+<p>您可以编辑并通过以下命令应用 crushmap：</p>
+<div class="highlight"><pre><span></span><code>crushtool -c crush_map.cm -o new_crush_map.cm
+sudo ceph osd setcrushmap -i new_crush_map.cm
+</code></pre></div>
+<p>然后即可配置 pool 使用新的 crush rule，参考<a href="#配置-pool">配置 pool</a>。</p>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/rados/operations/crush-map/">Ceph - CRUSH Maps</a></li>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/crush-map-edits/">Ceph - Manaully editing a CRUSH map</a></li>
+</ul>
+<h2 id="查看-pool">查看 pool<a class="headerlink" href="#查看-pool" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看集群中所有的 pool</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd lspools
+</code></pre></div>
+<h2 id="删除-pool">删除 pool<a class="headerlink" href="#删除-pool" title="Permanent link">&para;</a></h2>
+<p>通过以下命令删除一个 pool：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool rm &lt;pool-name&gt; &lt;pool-name&gt; --yes-i-really-really-mean-it
+</code></pre></div>
+<p>注意：pool 中的数据将被彻底删除，无法恢复，请小心操作。</p>
+<h2 id="配置-pool">配置 pool<a class="headerlink" href="#配置-pool" title="Permanent link">&para;</a></h2>
+<p>如果 pool 的 crush rule 是 replicate 类型，可通过以下命令设置 replicate size：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool set &lt;pool-name&gt; size &lt;size&gt; --yes-i-really-mean-it
+sudo ceph osd pool set &lt;pool-name&gt; min_size &lt;min-size&gt;
+</code></pre></div>
+<p>一般情况下，replicate pool 的 size 为 3（表示数据会被复制 3 份），min_size 为 2（表示最少有 2 份数据才能正常工作）。</p>
+<p>特殊情况下，例如底层存储已经有 RAID 容错机制，可将 size 和 min_size 都设为 1。</p>
+<p>如果集群中有多个 crush rule，可通过以下命令为 pool 指定 crush rule：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool set &lt;pool-name&gt; crush_rule &lt;crush-rule-name&gt;
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/pools/">Ceph - Pools</a></li>
+</ul>
+<h2 id="查看-cephfs">查看 cephfs<a class="headerlink" href="#查看-cephfs" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看集群中所有的 cephfs：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs ls
+</code></pre></div>
+<h2 id="删除-cephfs">删除 cephfs<a class="headerlink" href="#删除-cephfs" title="Permanent link">&para;</a></h2>
+<p>为了删除一个 cephfs，首先将其标记为不可用：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs fail &lt;fs-name&gt;
+</code></pre></div>
+<p>然后确认删除该 cephfs：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs rm &lt;fs-name&gt; --yes-i-really-mean-it
+</code></pre></div>
+<p>参考<a href="#删除-pool">删除 pool</a>，删除该 cephfs 下属所有的 pool。</p>
+<p>参考<a href="#移除-daemon">移除 daemon</a>，移除该 cephfs 对应的所有 mds daemon。</p>
+<h2 id="挂载-cephfs">挂载 cephfs<a class="headerlink" href="#挂载-cephfs" title="Permanent link">&para;</a></h2>
+<p>您可以通过 mount 命令在任意能够访问 Ceph 集群的机器上挂载 cephfs。</p>
+<p>首先安装 ceph 工具：</p>
+<div class="highlight"><pre><span></span><code>curl --silent --remote-name --location https://github.com/ceph/ceph/raw/quincy/src/cephadm/cephadm
+chmod +x cephadm
+sudo ./cephadm add-repo --release quincy
+sudo ./cephadm install ceph-common
+</code></pre></div>
+<p>然后配置访问权限：</p>
+<div class="highlight"><pre><span></span><code>mkdir -p -m 755 /etc/ceph
+ssh root@&lt;ceph-admin-node-ip&gt; &quot;sudo ceph config generate-minimal-conf&quot; | sudo tee /etc/ceph/ceph.conf
+chmod 644 /etc/ceph/ceph.conf
+
+ssh root@&lt;ceph-admin-node-ip&gt; &quot;sudo ceph fs authorize &lt;fs-name&gt; client.foo / rw&quot; | sudo tee /etc/ceph/ceph.client.foo.keyring
+chmod 600 /etc/ceph/ceph.client.foo.keyring
+</code></pre></div>
+<p>最后执行 mount 命令：</p>
+<div class="highlight"><pre><span></span><code>mount -t ceph foo@&lt;cluster-id&gt;.&lt;fs-name&gt;=/ &lt;mount-path&gt; -o secret=&lt;client-keyring&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>mount -t ceph foo@f5e95c18-a869-11ed-ba9b-b95348587a43.k8s=/ /mnt/mycephfs -o secret=AQBFgglkj0N0CRAA0LHXD/QFerke3mZZ6W3UAw==
+</code></pre></div>
+<p>注意：不要直接在 Ceph 集群的节点上挂载 cephfs，这可能会造成死锁。但在容器中挂载 cephfs 是可以的。</p>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephfs/mount-using-kernel-driver/">Ceph - Mount Using Kernel Driver</a> </li>
+<li><a href="https://docs.ceph.com/en/quincy/rados/troubleshooting/troubleshooting-pg/#one-node-cluster">Ceph - Do not mount on the same node</a> </li>
+</ul>
+<h2 id="配置-cephfs">配置 cephfs<a class="headerlink" href="#配置-cephfs" title="Permanent link">&para;</a></h2>
+<p>cephfs 支持的最大文件大小默认是 1TiB，可通过以下命令修改：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs set &lt;fs-name&gt; max_file_size &lt;num-bytes&gt;
+</code></pre></div>
+<p>例如，修改为 4TiB：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs set &lt;fs-name&gt; max_file_size 4398046511104
+</code></pre></div>
+<h2 id="查看-osd">查看 osd<a class="headerlink" href="#查看-osd" title="Permanent link">&para;</a></h2>
+<p>通过以下命令查看集群中所有的 osd 和 pool：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd dump
+</code></pre></div>
+<h2 id="查看-pg">查看 pg<a class="headerlink" href="#查看-pg" title="Permanent link">&para;</a></h2>
+<p>查看所有 pg 情况：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph pg dump
+</code></pre></div>
+<p>查看某个 pool 中的所有 pg：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph pg ls-by-pool &lt;pool-name&gt;
+</code></pre></div>
+<p>查看某个 osd 中的所有 pg</p>
+<div class="highlight"><pre><span></span><code>sudo ceph pg ls-by-osd &lt;pool-name&gt;
+</code></pre></div>
+<p>查看存在异常的所有 pg：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph pg dump_stuck unclean
+</code></pre></div>
+<p>查看某个 pg 的详细情况：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph pg &lt;pg-id&gt; query
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/placement-groups/">Ceph - Placement Groups</a></li>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/monitoring-osd-pg/">Ceph - Monitoring OSDs and PGs</a></li>
+</ul>
+<h2 id="调整-pg-数量">调整 pg 数量<a class="headerlink" href="#调整-pg-数量" title="Permanent link">&para;</a></h2>
+<p>一般情况下，建议通过以下命令禁用 pg autoscaling，以便集群正常运行：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph config set osd osd_pool_default_pg_autoscale_mode off
+</code></pre></div>
+<p>禁用 pg autoscaling 后，通过以下命令设置每个 pool 的 pg 数量：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool set &lt;pool-name&gt; pg_num &lt;num&gt;
+sudo ceph osd pool set &lt;pool-name&gt; pgp_num &lt;num&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool set default.rgw.buckets.data pg_num 256
+sudo ceph osd pool set default.rgw.buckets.data pgp_num 256
+</code></pre></div>
+<p>根据 <a href="https://access.redhat.com/documentation/zh-cn/red_hat_ceph_storage/3/html/storage_strategies_guide/placement_groups_pgs#pg_count">Red Hat 文档</a>，推荐每个 osd 约 100~200 个 pg。</p>
+<h2 id="修复-pg">修复 pg<a class="headerlink" href="#修复-pg" title="Permanent link">&para;</a></h2>
+<p>当集群的存储策略发生变化时，数据在重新平衡的过程中，pg 可能卡住，可尝试以下方式修复 pg：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph pg force-backfill &lt;pg-id&gt;
+
+sudo ceph pg force-recovery &lt;pg-id&gt;
+
+sudo ceph pg repeer &lt;pg-id&gt;
+</code></pre></div>
+<h2 id="手动-scrub--deep-scrub">手动 scrub / deep scrub<a class="headerlink" href="#手动-scrub--deep-scrub" title="Permanent link">&para;</a></h2>
+<p>scrub 是指 Ceph 对 pg 中的数据进行一致性验证，通常每天进行一次。</p>
+<p>deep scrub 是一种更深层次的 scrub，会读取数据的每个 bit 并计算 checksum，通常每周进行一次。</p>
+<p>对某个 pg 进行 scrub / deep scrub：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph pg scrub &lt;pg-id&gt;
+sudo ceph pg deep-scrub &lt;pg-id&gt;
+</code></pre></div>
+<p>对某个 osd 上的所有 pg 进行 scrub / deep scrub：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd scrub &lt;osd-id&gt;
+sudo ceph osd deep-scrub &lt;osd-id&gt;
+</code></pre></div>
+<p>对某个 pool 中的所有 pg 进行 scrub / deep scrub：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool scrub &lt;pool-name&gt;
+sudo ceph osd pool deep-scrub &lt;pool-name&gt;
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/placement-groups/#scrub-a-pg">Ceph - Scrub a PG</a></li>
+</ul>
+<h2 id="修改集群配置">修改集群配置<a class="headerlink" href="#修改集群配置" title="Permanent link">&para;</a></h2>
+<p>Ceph 集群有非常多的配置可以实时修改。</p>
+<p>查看某项配置的命令格式如下：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph config get &lt;who&gt; &lt;config-key&gt;
+</code></pre></div>
+<p>修改某项配置的命令格式如下：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph config set &lt;who&gt; &lt;config-key&gt; &lt;config-value&gt;
+</code></pre></div>
+<p>其中，<code>&lt;who&gt;</code> 表示该项配置对应的服务，如 mon、osd 等。</p>
+<p>例如，获取 osd 中最多能够同时进行多少个 backfill 操作：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph config get osd osd_max_backfills
+</code></pre></div>
+<p>设置该项配置的值为 8：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph config set osd osd_max_backfills 8
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/latest/rados/configuration/ceph-conf/">Ceph - Configuring Ceph</a></li>
+</ul>
+<h2 id="调整数据平衡速度">调整数据平衡速度<a class="headerlink" href="#调整数据平衡速度" title="Permanent link">&para;</a></h2>
+<p>当集群的存储策略发生变化时，数据会在 osd 之间进行重新平衡。如果期望尽快完成数据平衡，可以调整以下设置：</p>
+<table>
+  <tr>
+   <td>Name
+   </td>
+   <td>Default
+   </td>
+   <td>Now
+   </td>
+  </tr>
+  <tr>
+   <td>osd_max_backfills
+   </td>
+   <td>1
+   </td>
+   <td>8
+   </td>
+  </tr>
+  <tr>
+   <td>osd_recovery_max_active_hdd
+   </td>
+   <td>3
+   </td>
+   <td>8
+   </td>
+  </tr>
+  <tr>
+   <td>osd_recovery_priority
+   </td>
+   <td>5
+   </td>
+   <td>1
+   </td>
+  </tr>
+  <tr>
+   <td>osd_recovery_op_priority
+   </td>
+   <td>3
+   </td>
+   <td>1
+   </td>
+  </tr>
+  <tr>
+   <td>osd_recovery_max_single_start
+   </td>
+   <td>1
+   </td>
+   <td>8
+   </td>
+  </tr>
+  <tr>
+   <td>osd_recovery_sleep_hdd
+   </td>
+   <td>0.1
+   </td>
+   <td>0
+   </td>
+  </tr>
+</table>
+
+<p>注意：调整上述配置会极大地影响正常的读写速度，最好在无人使用的情况下进行，并在数据平衡完成后重新调整为默认值。</p>
+<h2 id="删除集群">删除集群<a class="headerlink" href="#删除集群" title="Permanent link">&para;</a></h2>
+<p>注意，此为危险操作，数据将全部丢失。</p>
+<p>如果确认需要删除整个 Ceph 集群，可以从非管理节点开始，逐一在每个节点上运行以下命令：</p>
+<div class="highlight"><pre><span></span><code>sudo apt update
+sudo apt install ceph-deploy -y
+sudo ceph-deploy purge &lt;hostname&gt;
+sudo rm -rf /var/lib/ceph/*
+</code></pre></div>
+<p>通过以下命令格式化 Ceph 使用过的存储设备：</p>
+<div class="highlight"><pre><span></span><code>sudo sgdisk --zap-all &lt;device-path&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo sgdisk --zap-all /dev/sdb
+</code></pre></div>
+<p>然后重启节点，才能恢复存储设备的状态：</p>
+<div class="highlight"><pre><span></span><code>sudo reboot
+</code></pre></div>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      最后更新:
+      2023-08-07
+    
+  </small>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            回到页面顶部
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2018 - 2023 TensorStack
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+        
+          <script src="javascripts/mathjax.js"></script>
+        
+      
+        
+          <script src="javascripts/tex-mml-chtml.js"></script>
+        
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1201 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="TensorStack Authors">
+      
+      
+        <link rel="canonical" href="https://t9k.github.io/ceph-admin-docs/installation.html">
+      
+      
+        <link rel="prev" href="concepts.html">
+      
+      
+        <link rel="next" href="operations.html">
+      
+      <link rel="icon" href="assets/icon.svg">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+    
+    
+      
+        <title>集群安装 - Ceph 管理员手册</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.eebd395e.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#集群安装" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="index.html" title="Ceph 管理员手册" class="md-header__button md-logo" aria-label="Ceph 管理员手册" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ceph 管理员手册
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              集群安装
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/t9k/ceph-admin-docs" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    t9k/ceph-admin-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="index.html" class="md-tabs__link">
+      首页
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="concepts.html" class="md-tabs__link">
+      基本概念
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  <li class="md-tabs__item">
+    <a href="installation.html" class="md-tabs__link md-tabs__link--active">
+      集群安装
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="operations.html" class="md-tabs__link">
+      集群运维
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="k8s.html" class="md-tabs__link">
+      K8s 集成
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="s3.html" class="md-tabs__link">
+      S3 集成
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="troubleshooting.html" class="md-tabs__link">
+      常见故障
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Ceph 管理员手册" class="md-nav__button md-logo" aria-label="Ceph 管理员手册" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    Ceph 管理员手册
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/t9k/ceph-admin-docs" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    t9k/ceph-admin-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        首页
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="concepts.html" class="md-nav__link">
+        基本概念
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          集群安装
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="installation.html" class="md-nav__link md-nav__link--active">
+        集群安装
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#安装-ceph" class="md-nav__link">
+    安装 Ceph
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加节点" class="md-nav__link">
+    添加节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加存储设备" class="md-nav__link">
+    添加存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mpath-设备" class="md-nav__link">
+    mpath 设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-dashboard" class="md-nav__link">
+    配置 dashboard
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-crushmap" class="md-nav__link">
+    配置 crushmap
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置时钟同步" class="md-nav__link">
+    配置时钟同步
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置警告通知" class="md-nav__link">
+    配置警告通知
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#创建-cephfs" class="md-nav__link">
+    创建 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-erasure-code" class="md-nav__link">
+    配置 erasure code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="operations.html" class="md-nav__link">
+        集群运维
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="k8s.html" class="md-nav__link">
+        K8s 集成
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="s3.html" class="md-nav__link">
+        S3 集成
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        常见故障
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#安装-ceph" class="md-nav__link">
+    安装 Ceph
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加节点" class="md-nav__link">
+    添加节点
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#添加存储设备" class="md-nav__link">
+    添加存储设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mpath-设备" class="md-nav__link">
+    mpath 设备
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-dashboard" class="md-nav__link">
+    配置 dashboard
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-crushmap" class="md-nav__link">
+    配置 crushmap
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置时钟同步" class="md-nav__link">
+    配置时钟同步
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置警告通知" class="md-nav__link">
+    配置警告通知
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#创建-cephfs" class="md-nav__link">
+    创建 cephfs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配置-erasure-code" class="md-nav__link">
+    配置 erasure code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="集群安装">集群安装<a class="headerlink" href="#集群安装" title="Permanent link">&para;</a></h1>
+<h2 id="安装-ceph">安装 Ceph<a class="headerlink" href="#安装-ceph" title="Permanent link">&para;</a></h2>
+<p>Ceph 集群的安装从 bootstrap 一个节点开始，然后逐步加入其它节点、添加存储设备。</p>
+<p>首先，确保节点上装有 Docker，如果没有，请按照 <a href="https://docs.docker.com/engine/install/ubuntu/">Docker 官方文档</a>安装 Docker。</p>
+<p>然后，在第一个节点上安装 Ceph：</p>
+<div class="highlight"><pre><span></span><code>curl --silent --remote-name --location https://github.com/ceph/ceph/raw/quincy/src/cephadm/cephadm
+chmod +x cephadm
+sudo ./cephadm add-repo --release quincy
+sudo ./cephadm install
+
+sudo cephadm bootstrap --mon-ip &lt;ip-address-of-first-node&gt;
+
+sudo cephadm add-repo --release quincy
+sudo cephadm install ceph-common
+</code></pre></div>
+<p>最后，您可以继续<a href="#添加节点">加入其他节点</a>、<a href="#添加存储设备">添加存储设备</a>。</p>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/install/">Ceph - Cephadm Install</a> </li>
+</ul>
+<h2 id="添加节点">添加节点<a class="headerlink" href="#添加节点" title="Permanent link">&para;</a></h2>
+<p>假设新加入的节点的 IP 为 10.1.2.3，名称为 host1。</p>
+<p>首先，将 Ceph 集群的 SSH 公钥添加到新节点的信任列表中。</p>
+<p>如果有新节点的 root 密码，在任意管理节点上运行：</p>
+<div class="highlight"><pre><span></span><code>sudo ssh-copy-id -f -i /etc/ceph/ceph.pub root@10.1.2.3
+</code></pre></div>
+<p>如果有新节点的某个具有 sudo 权限的用户密码，假设其用户名为 superuser。</p>
+<p>在任意管理节点上运行：</p>
+<div class="highlight"><pre><span></span><code>sudo scp /etc/ceph/ceph.pub superuser@10.1.2.3:~/ceph.pub
+</code></pre></div>
+<p>在新节点上运行：</p>
+<div class="highlight"><pre><span></span><code>sudo su
+cat ~/ceph.pub &gt;&gt; /root/.ssh/authorized_keys
+</code></pre></div>
+<p>然后，确保新节点上安装了 Docker：</p>
+<div class="highlight"><pre><span></span><code>sudo docker version
+</code></pre></div>
+<p>如果没有，请按照 <a href="https://docs.docker.com/engine/install/ubuntu/">Docker 官方文档</a>安装 Docker。</p>
+<p>最后，在管理节点上运行以下命令添加新节点到 Ceph 集群：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch host add host1 10.1.2.3
+sudo ceph orch host add host1 10.1.2.3  --labels _admin
+</code></pre></div>
+<p>并在新节点中安装 Ceph 命令行：</p>
+<div class="highlight"><pre><span></span><code>curl --silent --remote-name --location https://github.com/ceph/ceph/raw/quincy/src/cephadm/cephadm
+chmod +x cephadm
+sudo ./cephadm add-repo --release quincy --repo-url https://mirrors.aliyun.com/ceph # speed up using aliyun mirror
+sudo apt update
+sudo ./cephadm install ceph-common ceph
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/host-management/#cephadm-adding-hosts">Ceph - Adding Hosts</a> </li>
+</ul>
+<h2 id="添加存储设备">添加存储设备<a class="headerlink" href="#添加存储设备" title="Permanent link">&para;</a></h2>
+<p>用于 Ceph 存储的存储设备需要满足下列要求：</p>
+<ul>
+<li>没有分区</li>
+<li>没有 LVM 状态</li>
+<li>没有被挂载</li>
+<li>没有文件系统</li>
+<li>大于 5GB</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">什么是 LVM？</p>
+<p>Logical Volume Manager 可以将 Linux 中的物理硬盘虚拟化为逻辑卷，以便更灵活地管理和使用存储。参考文档：</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Logical_Volume_Manager_(Linux)">https://en.wikipedia.org/wiki/Logical_Volume_Manager_(Linux)</a></li>
+<li><a href="https://wiki.archlinux.org/title/LVM">https://wiki.archlinux.org/title/LVM</a></li>
+</ul>
+</div>
+<p>如果存储设备曾被用于其他 Ceph 集群，可通过以下命令清除设备状态：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch device zap &lt;hostname&gt; &lt;devicepath&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch device zap host1 /dev/sdb
+</code></pre></div>
+<p>如果存储设备曾被用作其他用途，可通过以下命令删除设备中的分区：</p>
+<div class="highlight"><pre><span></span><code># 删除分区
+sudo fdisk /dev/sdX
+
+# 清除残余的分区表信息
+sudo sgdisk --zap-all /dev/sdX
+</code></pre></div>
+<p>如果设备中仍然有残留的 LVM 状态，可尝试：</p>
+<ul>
+<li>重启节点</li>
+<li>利用 <a href="https://tylersguides.com/guides/remove-an-lvm-disk/">LVM 相关命令</a>清除</li>
+</ul>
+<p>在任意管理节点上运行以下命令，即可自动化地发现所有节点上可用的存储设备，并为其创建 OSD Daemon、添加到 Ceph 集群中：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch apply osd --all-available-devices
+</code></pre></div>
+<p>或者，停止自动发现：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch apply osd --all-available-devices --unmanaged=true
+</code></pre></div>
+<p>然后手动为某个存储设备创建 OSD：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch daemon add osd &lt;hostname&gt;:&lt;device-path&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph orch daemon add osd host1:/dev/sdb
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/services/osd/#deploy-osds">Ceph - Deploy OSDs</a> </li>
+</ul>
+<h2 id="mpath-设备">mpath 设备<a class="headerlink" href="#mpath-设备" title="Permanent link">&para;</a></h2>
+<p>如果存储设备不是常见的 hdd、ssd 硬盘，而是 mpath 设备，您需要手动创建 osd。</p>
+<div class="admonition info">
+<p class="admonition-title">什么是 mpath 设备？</p>
+<p>Multipath 是一种为主机和存储硬件之间的网络通信提供容错的技术。参考文档：</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Linux_DM_Multipath">https://en.wikipedia.org/wiki/Linux_DM_Multipath</a></li>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/dm_multipath/mpath_devices">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/dm_multipath/mpath_devices</a></li>
+<li><a href="https://ubuntu.com/server/docs/device-mapper-multipathing-introduction">https://ubuntu.com/server/docs/device-mapper-multipathing-introduction</a></li>
+</ul>
+</div>
+<p>假设 mpath 设备位于 /dev/mapper/mpatha。首先，创建 lvm 相关的 pv、vg、lv 等：</p>
+<div class="highlight"><pre><span></span><code>sudo pvcreate --metadatasize 250k -y -ff /dev/mapper/mpatha
+sudo vgcreate vgmpatha /dev/mapper/mpatha
+sudo lvcreate -n lv0 -l 100%FREE vgmpatha
+</code></pre></div>
+<p>然后，使用 ceph 命令行工具准备 lv：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph-volume lvm prepare --data /dev/vgmpatha/lv0
+</code></pre></div>
+<p>最后，激活 osd：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph-volume lvm activate --all
+</code></pre></div>
+<p>激活时可能需要指定具体的 osd：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph-volume lvm activate &lt;osd-id&gt; &lt;osd-fsid&gt;
+</code></pre></div>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph-volume lvm activate 3 249e9103-5fec-4acc-b545-82c644f8756f
+</code></pre></div>
+<p>其中，<code>&lt;osd-id&gt;</code> 和 <code>&lt;osd-fsid&gt;</code> 在使用 ceph 命令行工具准备 lv 步骤的输出中可以找到，也可以通过以下命令查看：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph-volume lvm list 
+</code></pre></div>
+<p>通过以下命令可以查看 lvm 相关的 pv、vg、lv：</p>
+<div class="highlight"><pre><span></span><code>sudo pvs
+sudo pvdisplay
+sudo vgs
+sudo vgdisplay
+sudo lvs
+sudo lvdisplay
+</code></pre></div>
+<p>当 mpath 设备所在的节点重启时，lv 可能变为 unavailable 状态，导致 osd 异常，需要通过以下命令重新激活 lv：</p>
+<div class="highlight"><pre><span></span><code>sudo lvchange -ay /dev/vgmpatha/lv0
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://forum.proxmox.com/threads/ceph-with-multipath.70813/post-317961">https://forum.proxmox.com/threads/ceph-with-multipath.70813/post-317961</a></li>
+</ul>
+<h2 id="配置-dashboard">配置 dashboard<a class="headerlink" href="#配置-dashboard" title="Permanent link">&para;</a></h2>
+<p>Ceph 提供可视化 dashboard 来管理集群。</p>
+<p>启用 dashboard：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph mgr module enable dashboard
+</code></pre></div>
+<p>设置 http 访问： \</p>
+<div class="highlight"><pre><span></span><code>sudo ceph config set mgr mgr/dashboard/ssl false
+</code></pre></div>
+<p>重启 dashboard： \</p>
+<div class="highlight"><pre><span></span><code>sudo ceph mgr module disable dashboard
+sudo ceph mgr module enable dashboard
+</code></pre></div>
+<p>设置 dashboard 密码：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph dashboard ac-user-set-password admin -i &lt;file-containing-password&gt;
+</code></pre></div>
+<p>参考<a href="operations.html#查看-daemon-状态">查看 daemon 状态</a>，找到 mgr daemon 所在的节点，dashboard 的地址即为 <code>http://&lt;mgr-host-ip&gt;:8080</code>。</p>
+<p>为了配置 grafana 使用 http，通过 SSH 登录 grafana 所在的节点，修改 grafana 的配置文件，将 https 改为 http，然后重启 grafana 容器：</p>
+<div class="highlight"><pre><span></span><code>sudo vim /var/lib/ceph/&lt;cluster-id&gt;/grafana.&lt;hostname&gt;/etc/grafana/grafana.ini
+docker ps | grep grafana
+docker restart &lt;grafana-container&gt;
+</code></pre></div>
+<p>配置 grafana、alertmanager、prometheus 等监控组件，以便在 dashboard 中查看可视化统计图表：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph dashboard set-grafana-frontend-api-url http://&lt;host-ip&gt;:3000
+sudo ceph dashboard set-grafana-api-ssl-verify False
+sudo ceph dashboard set-grafana-api-url http://&lt;host-ip&gt;:3000
+sudo ceph dashboard set-alertmanager-api-host http://&lt;host-ip&gt;:9093
+sudo ceph dashboard set-alertmanager-api-ssl-verify false
+sudo ceph dashboard set-prometheus-api-host http://&lt;host-ip&gt;:9095
+sudo ceph dashboard set-prometheus-api-ssl-verify false
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/mgr/dashboard/">Ceph - Dashboard</a></li>
+</ul>
+<h2 id="配置-crushmap">配置 crushmap<a class="headerlink" href="#配置-crushmap" title="Permanent link">&para;</a></h2>
+<p>Ceph 的默认存储策略是在不同的节点之间将数据复制 3 份，以提供高可用性。如果我们只有少于 3 个节点，根据<a href="https://balderscape.medium.com/setting-up-a-virtual-single-node-ceph-storage-cluster-d86d6a6c658e">这个博客</a>，需要配置 Ceph 在 OSD 之间复制数据。</p>
+<div class="admonition note">
+<p class="admonition-title">注意</p>
+<p>在多于 3 个节点的生产集群中，推荐配置仍然是在节点之间复制数据，以避免一个节点故障导致某些数据的永久丢失。</p>
+</div>
+<p>查看当前的 crushmap：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd crush rule dump
+</code></pre></div>
+<p>导出当前的 crushmap：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd getcrushmap -o comp_crush_map.cm
+</code></pre></div>
+<p>将导出的 curshmap 解析为人类可读的文件： </p>
+<div class="highlight"><pre><span></span><code>crushtool -d comp_crush_map.cm -o crush_map.cm
+</code></pre></div>
+<p>编辑 crushmap，将其中的 host 改为 osd： </p>
+<div class="highlight"><pre><span></span><code>vim crush_map.cm
+</code></pre></div>
+<p>例如，寻找 crushmap 中的下列内容：</p>
+<div class="highlight"><pre><span></span><code># rules
+rule replicated_rule {
+    id 0
+    type replicated
+    step take default
+    step chooseleaf firstn 0 type host
+    step emit
+}
+</code></pre></div>
+<p>将其修改为：</p>
+<div class="highlight"><pre><span></span><code># rules
+rule replicated_rule {
+    id 0
+    type replicated
+    step take default
+    step chooseleaf firstn 0 type osd
+    step emit
+}
+</code></pre></div>
+<p>编译新的 crushmap：</p>
+<div class="highlight"><pre><span></span><code>crushtool -c crush_map.cm -o new_crush_map.cm
+</code></pre></div>
+<p>应用新的 curshmap： \</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd setcrushmap -i new_crush_map.cm
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/rados/operations/crush-map/">Ceph - CRUSH Maps</a></li>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/crush-map-edits/">Ceph - Manaully editing a CRUSH map</a></li>
+</ul>
+<h2 id="配置时钟同步">配置时钟同步<a class="headerlink" href="#配置时钟同步" title="Permanent link">&para;</a></h2>
+<p>我们推荐使用 chrony 来同步所有节点的时钟，推荐采用一个主节点向外部时钟服务器同步时钟、其他节点向该主节点同步时钟的方案。</p>
+<p>通过以下命令安装 chrony：</p>
+<div class="highlight"><pre><span></span><code>sudo apt update
+sudo apt install chrony
+</code></pre></div>
+<p>chrony 配置文件位于 /etc/chrony/chrony.conf</p>
+<p>主节点配置如下：</p>
+<div class="highlight"><pre><span></span><code># Welcome to the chrony configuration file. See chrony.conf(5) for more
+# information about usuable directives.
+
+# This will use (up to):
+# - 4 sources from ntp.ubuntu.com which some are ipv6 enabled
+# - 2 sources from 2.ubuntu.pool.ntp.org which is ipv6 enabled as well
+# - 1 source from [01].ubuntu.pool.ntp.org each (ipv4 only atm)
+# This means by default, up to 6 dual-stack and up to 2 additional IPv4-only
+# sources will be used.
+# At the same time it retains some protection against one of the entries being
+# down (compare to just using one of the lines). See (LP: #1754358) for the
+# discussion.
+#
+# About using servers from the NTP Pool Project in general see (LP: #104525).
+# Approved by Ubuntu Technical Board on 2011-02-08.
+# See http://www.pool.ntp.org/join.html for more information.
+pool ntp.ubuntu.com        iburst maxsources 4
+pool 0.ubuntu.pool.ntp.org iburst maxsources 1
+pool 1.ubuntu.pool.ntp.org iburst maxsources 1
+pool 2.ubuntu.pool.ntp.org iburst maxsources 2
+
+allow 100.64.4.0/8
+
+# This directive specify the location of the file containing ID/key pairs for
+# NTP authentication.
+keyfile /etc/chrony/chrony.keys
+
+# This directive specify the file into which chronyd will store the rate
+# information.
+driftfile /var/lib/chrony/chrony.drift
+
+# Uncomment the following line to turn logging on.
+#log tracking measurements statistics
+
+# Log files location.
+logdir /var/log/chrony
+
+# Stop bad estimates upsetting machine clock.
+maxupdateskew 100.0
+
+# This directive enables kernel synchronisation (every 11 minutes) of the
+# real-time clock. Note that it can&#39;t be used along with the &#39;rtcfile&#39; directive.
+rtcsync
+
+# Step the system clock instead of slewing it if the adjustment is larger than
+# one second, but only in the first three clock updates.
+makestep 1 3
+</code></pre></div>
+<p>注意，其中 <code>allow 100.64.4.0/8</code> 需填写其他节点的 ip 网段。</p>
+<p>其他节点配置如下：</p>
+<div class="highlight"><pre><span></span><code># Welcome to the chrony configuration file. See chrony.conf(5) for more
+# information about usuable directives.
+
+# This will use (up to):
+# - 4 sources from ntp.ubuntu.com which some are ipv6 enabled
+# - 2 sources from 2.ubuntu.pool.ntp.org which is ipv6 enabled as well
+# - 1 source from [01].ubuntu.pool.ntp.org each (ipv4 only atm)
+# This means by default, up to 6 dual-stack and up to 2 additional IPv4-only
+# sources will be used.
+# At the same time it retains some protection against one of the entries being
+# down (compare to just using one of the lines). See (LP: #1754358) for the
+# discussion.
+#
+# About using servers from the NTP Pool Project in general see (LP: #104525).
+# Approved by Ubuntu Technical Board on 2011-02-08.
+# See http://www.pool.ntp.org/join.html for more information.
+server 100.64.4.104
+
+# This directive specify the location of the file containing ID/key pairs for
+# NTP authentication.
+keyfile /etc/chrony/chrony.keys
+
+# This directive specify the file into which chronyd will store the rate
+# information.
+driftfile /var/lib/chrony/chrony.drift
+
+# Uncomment the following line to turn logging on.
+#log tracking measurements statistics
+
+# Log files location.
+logdir /var/log/chrony
+
+# Stop bad estimates upsetting machine clock.
+maxupdateskew 100.0
+
+# This directive enables kernel synchronisation (every 11 minutes) of the
+# real-time clock. Note that it can&#39;t be used along with the &#39;rtcfile&#39; directive.
+rtcsync
+
+# Step the system clock instead of slewing it if the adjustment is larger than
+# one second, but only in the first three clock updates.
+makestep 1 3
+</code></pre></div>
+<p>注意，其中 <code>server 100.64.4.104</code> 需填写主节点的 ip。</p>
+<p>修改配置文件后，通过以下命令重启 chrony 使配置生效：</p>
+<div class="highlight"><pre><span></span><code>sudo systemctl restart chronyd
+</code></pre></div>
+<p>在主节点上查看 chrony 运行状态：</p>
+<div class="highlight"><pre><span></span><code>sudo chronyc activity
+sudo chronyc tracking
+sudo chronyc sources -v
+sudo chronyc clients
+</code></pre></div>
+<p>查看 Ceph 时钟同步状态：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph time-sync-status
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://ubuntu.com/blog/ubuntu-bionic-using-chrony-to-configure-ntp">https://ubuntu.com/blog/ubuntu-bionic-using-chrony-to-configure-ntp</a></li>
+</ul>
+<h2 id="配置警告通知">配置警告通知<a class="headerlink" href="#配置警告通知" title="Permanent link">&para;</a></h2>
+<p>Ceph 自带一整套监控系统，包括 prometheus/grafana/alert mamanger。为了能够及时收到 alert manager 发出的警告，您可以配置 alert manager 通过<a href="https://prometheus.io/docs/alerting/latest/configuration/#email_config">邮箱</a>和<a href="https://prometheus.io/docs/alerting/latest/configuration/#wechat_config">企业微信</a>来发送警告信息。</p>
+<p>通过 SSH 登录 alert manager 所在的节点，将位于 <code>/var/lib/ceph/&amp;lt;cluster-id&gt;/alertmanager.&amp;lt;hostname&gt;/etc/alertmanager</code> 的配置文件 alertmanager.yml 修改为如下内容（注意替换其中邮箱和企业微信相关的具体配置）：</p>
+<div class="highlight"><pre><span></span><code># This file is generated by cephadm.
+# See https://prometheus.io/docs/alerting/configuration/ for documentation.
+
+global:
+  resolve_timeout: 5m
+  http_config:
+    tls_config:
+      insecure_skip_verify: true
+
+route:
+  receiver: &#39;ceph-dashboard&#39;
+  routes:
+    - group_by: [&#39;alertname&#39;]
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1h
+      receiver: &#39;ceph-dashboard&#39;
+      continue: true
+    - group_by: [&#39;alertname&#39;]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 6h
+      receiver: &#39;t9k-monitoring/email/t9k-sre&#39;
+      continue: true
+    - group_by: [&#39;alertname&#39;]
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: &#39;t9k-monitoring/wechat/alerts&#39;
+      continue: true
+
+receivers:
+- name: &#39;ceph-dashboard&#39;
+  webhook_configs:
+  - url: &#39;http://&lt;hostname&gt;:8080/api/prometheus_receiver&#39;
+- name: t9k-monitoring/email/t9k-sre
+  email_configs:
+  - to: &lt;to&gt;
+    from: &lt;from&gt;
+    smarthost: &lt;smarthost&gt;
+    auth_username: &lt;auth_username&gt;
+    auth_password: &lt;auth_password&gt;
+    headers:
+      Subject: &#39;{{ template &quot;email.subject&quot; . }}&#39;
+- name: t9k-monitoring/wechat/alerts
+  wechat_configs:
+  - api_secret: &lt;api_secret&gt;
+    corp_id: &lt;corp_id&gt;
+    agent_id: &lt;agent_id&gt;
+    to_user: &#39;@all&#39;
+    message: &#39;{{ template &quot;wechat.message&quot; . }}&#39;
+templates:
+- /etc/alertmanager/custom.tmpl
+</code></pre></div>
+<p>在同一文件夹下创建 custom.tmpl，内容如下：</p>
+<div class="highlight"><pre><span></span><code>{{ define &quot;email.subject&quot; }}[ceph]{{ template &quot;__subject&quot; . }}{{ end }}
+
+{{ define &quot;__custom_text_alert_list&quot; }}{{ range . }}
+--
+{{with .Annotations.description}}Description:  {{.}} {{else -}} {{end}}
+
+Labels:
+{{- range .Labels.SortedPairs }}
+- {{ .Name }}:
+   {{ .Value }}
+{{- end }}
+{{- end }}{{- end -}}
+
+{{ define &quot;wechat.message&quot; }}[ceph]{{ template &quot;__subject&quot; . }}
+
+Summary: {{ .CommonAnnotations.summary }}
+{{ if gt (len .Alerts.Firing) 0 }}
+Firing Alerts:
+{{ template &quot;__custom_text_alert_list&quot; .Alerts.Firing }}
+{{- end }}
+{{- if gt (len .Alerts.Resolved) 0}}
+Resolved Alerts:
+{{ template &quot;__custom_text_alert_list&quot; .Alerts.Resolved }}
+{{- end }}{{- end -}}
+</code></pre></div>
+<p>然后重启 alert manager 容器：</p>
+<div class="highlight"><pre><span></span><code>docker ps | grep alertmanager
+docker restart &lt;alert-manager-container&gt;
+</code></pre></div>
+<h2 id="创建-cephfs">创建 cephfs<a class="headerlink" href="#创建-cephfs" title="Permanent link">&para;</a></h2>
+<p>运行以下命令创建 cephfs：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs volume create &lt;fs_name&gt; --placement=&lt;placement&gt;
+</code></pre></div>
+<p>其中 <code>&lt;placement&gt;</code>是指 cephfs 的 mds daemon 部署在哪些节点上。为了高可用，一个 cephfs 一般有两个 mds daemon：一个正常运行，一个随时准备接替。</p>
+<p>例如：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs volume create k8s --placement=&quot;host1 host2&quot;
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/cephadm/services/mds/#orchestrator-cli-cephfs">Ceph - Deploy CephFS</a></li>
+</ul>
+<h2 id="配置-erasure-code">配置 erasure code<a class="headerlink" href="#配置-erasure-code" title="Permanent link">&para;</a></h2>
+<p>erasure code 是一种纠错码，在原始数据的基础上冗余存储一些经过编码的数据块，以便在一些数据块损坏时仍然能够计算出原始数据。</p>
+<p>erasure code 最重要的参数是 k 和 m，其中</p>
+<ul>
+<li>k 表示原始数据将被分为 k 个数据块（data chunks）</li>
+<li>m 表示在原始数据的基础上计算出 m 个编码块（encoding chunks）</li>
+</ul>
+<p>上述 k + m 个块将会被分别存储在不同的地方，根据配置的不同，可以是不同的 host、不同的 osd 等。</p>
+<p>erasure code 的优势在于</p>
+<ul>
+<li>最多能承受 k + m 个块中任意 m 个块的损坏</li>
+<li>存储 1 个单位的原始数据，需要 (k + m) / k 个单位的空间</li>
+</ul>
+<p>作为参考，Red Hat 支持以下 k/m 值：</p>
+<ul>
+<li>k=8 m=3</li>
+<li>k=8 m=4</li>
+<li>k=4 m=2</li>
+</ul>
+<p>首先创建一个 erasure code profile（以 k=4 m=2 为例）：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd erasure-code-profile set ecprofile-k4-m2 k=4 m=2 crush-failure-domain=osd
+sudo ceph osd erasure-code-profile ls
+sudo ceph osd erasure-code-profile get ecprofile-k4-m2
+</code></pre></div>
+<p>然后创建一个 erasure coded pool：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool create ecpool-k4-m2 erasure ecprofile-k4-m2
+sudo ceph osd pool set ecpool-k4-m2 allow_ec_overwrites true
+sudo ceph osd pool application enable ecpool-k4-m2 cephfs
+</code></pre></div>
+<p>最后将 erasure coded pool 作为第二个 data pool 加入到 CephFS 中：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph fs add_data_pool &lt;fs-name&gt; ecpool-k4-m2
+sudo ceph fs ls
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/latest/rados/operations/erasure-code/">Ceph - Erasure code</a></li>
+<li><a href="https://docs.ceph.com/en/quincy/cephfs/createfs/#using-erasure-coded-pools-with-cephfs">Ceph - Using erasure coded pools with CephFS</a></li>
+<li><a href="https://docs.ceph.com/en/quincy/cephfs/file-layouts/#adding-a-data-pool-to-the-file-system">Ceph - Adding a data pool to the file system</a></li>
+</ul>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      最后更新:
+      2023-08-07
+    
+  </small>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            回到页面顶部
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2018 - 2023 TensorStack
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+        
+          <script src="javascripts/mathjax.js"></script>
+        
+      
+        
+          <script src="javascripts/tex-mml-chtml.js"></script>
+        
+      
+    
+  </body>
+</html>

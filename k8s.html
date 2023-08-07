@@ -1,0 +1,1008 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="TensorStack Authors">
+      
+      
+        <link rel="canonical" href="https://t9k.github.io/ceph-admin-docs/k8s.html">
+      
+      
+        <link rel="prev" href="operations.html">
+      
+      
+        <link rel="next" href="s3.html">
+      
+      <link rel="icon" href="assets/icon.svg">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+    
+    
+      
+        <title>K8s 集成 - Ceph 管理员手册</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.eebd395e.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="cyan">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#k8s-集成" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="index.html" title="Ceph 管理员手册" class="md-header__button md-logo" aria-label="Ceph 管理员手册" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Ceph 管理员手册
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              K8s 集成
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="分享" aria-label="分享" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/t9k/ceph-admin-docs" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    t9k/ceph-admin-docs
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="index.html" class="md-tabs__link">
+      首页
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="concepts.html" class="md-tabs__link">
+      基本概念
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="installation.html" class="md-tabs__link">
+      集群安装
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="operations.html" class="md-tabs__link">
+      集群运维
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  <li class="md-tabs__item">
+    <a href="k8s.html" class="md-tabs__link md-tabs__link--active">
+      K8s 集成
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="s3.html" class="md-tabs__link">
+      S3 集成
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="troubleshooting.html" class="md-tabs__link">
+      常见故障
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Ceph 管理员手册" class="md-nav__button md-logo" aria-label="Ceph 管理员手册" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    Ceph 管理员手册
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/t9k/ceph-admin-docs" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    t9k/ceph-admin-docs
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        首页
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="concepts.html" class="md-nav__link">
+        基本概念
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="installation.html" class="md-nav__link">
+        集群安装
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="operations.html" class="md-nav__link">
+        集群运维
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          K8s 集成
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="k8s.html" class="md-nav__link md-nav__link--active">
+        K8s 集成
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#配置-ceph-csi" class="md-nav__link">
+    配置 Ceph CSI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#通过-helm-chart-配置-ceph-csi" class="md-nav__link">
+    通过 Helm Chart 配置 Ceph CSI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#创建-pvc-并绑定-pod" class="md-nav__link">
+    创建 PVC 并绑定 Pod
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-pvc-创建绑定失败原因" class="md-nav__link">
+    查看 PVC 创建/绑定失败原因
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pvc-备份" class="md-nav__link">
+    PVC 备份
+  </a>
+  
+    <nav class="md-nav" aria-label="PVC 备份">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#在-k8s-中启用-volume-snapshot-功能" class="md-nav__link">
+    在 K8s 中启用 Volume Snapshot 功能
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配额管理" class="md-nav__link">
+    配额管理
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="s3.html" class="md-nav__link">
+        S3 集成
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="troubleshooting.html" class="md-nav__link">
+        常见故障
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#配置-ceph-csi" class="md-nav__link">
+    配置 Ceph CSI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#通过-helm-chart-配置-ceph-csi" class="md-nav__link">
+    通过 Helm Chart 配置 Ceph CSI
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#创建-pvc-并绑定-pod" class="md-nav__link">
+    创建 PVC 并绑定 Pod
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#查看-pvc-创建绑定失败原因" class="md-nav__link">
+    查看 PVC 创建/绑定失败原因
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pvc-备份" class="md-nav__link">
+    PVC 备份
+  </a>
+  
+    <nav class="md-nav" aria-label="PVC 备份">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#在-k8s-中启用-volume-snapshot-功能" class="md-nav__link">
+    在 K8s 中启用 Volume Snapshot 功能
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#配额管理" class="md-nav__link">
+    配额管理
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="k8s-集成">K8s 集成<a class="headerlink" href="#k8s-集成" title="Permanent link">&para;</a></h1>
+<p>通过 <a href="https://github.com/ceph/ceph-csi/">Ceph CSI</a>，K8s 可以利用 Ceph 作为 PVC 的存储提供者（Provisioner）。</p>
+<h2 id="配置-ceph-csi">配置 Ceph CSI<a class="headerlink" href="#配置-ceph-csi" title="Permanent link">&para;</a></h2>
+<p>首先，在 Ceph 集群中创建一个名为 demo-fs 的 Ceph File System 和一个名为 demo-user 的 Ceph 用户，在管理节点中执行以下命令即可：</p>
+<div class="highlight"><pre><span></span><code>$ sudo ceph fs volume create demo-fs
+$ sudo ceph auth get-or-create client.demo-user mon &#39;allow r&#39; \
+  osd &#39;allow rw tag cephfs *=*&#39; mgr &#39;allow rw&#39; mds &#39;allow rw&#39;
+[client.demo-user]
+    key = AQAhuZBjSuS9AxBD77AvVjr+vAg9zhjRK7NR+g==
+</code></pre></div>
+<p>注意上述生成的 key 值后面会用到。</p>
+<p>然后，查看 Ceph 集群的一些相关信息，在管理节点中执行以下命令即可：</p>
+<div class="highlight"><pre><span></span><code>$ sudo ceph mon dump
+epoch 2
+fsid 47f20cbc-914f-24ed-93dc-9f2800951ba2
+last_changed 2023-01-12T06:01:55.659954+0000
+created 2023-01-11T01:30:12.337519+0000
+min_mon_release 17 (quincy)
+election_strategy: 1
+0: [v2:10.0.0.1:3300/0,v1:10.0.0.1:6789/0] mon.ds01
+1: [v2:10.0.0.2:3300/0,v1:10.0.0.2:6789/0] mon.e01
+dumped monmap epoch 2
+</code></pre></div>
+<p>注意上述输出中的 fsid (47f20cbc-914f-24ed-93dc-9f2800951ba2) 和节点列表 (10.0.0.1:6789, 10.0.0.2:6789)，后面会用到。</p>
+<p>最后，在 K8s 集群中创建相关资源，包括 ConfigMap、Secret、Deployment、DaemonSet 等等。</p>
+<div class="highlight"><pre><span></span><code>git clone https://github.com/ceph/ceph-csi.git
+cd ceph-csi/examples
+</code></pre></div>
+<p>编辑 csi-config-map-sample.yaml，填入上面的 fsid 和节点列表，除此之外的其他项可以删除，示例如下：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: v1
+kind: ConfigMap
+data:
+ config.json: |-
+   [
+     {
+       &quot;clusterID&quot;: &quot;47f20cbc-914f-24ed-93dc-9f2800951ba2&quot;,
+       &quot;monitors&quot;: [
+         &quot;10.0.0.1:6789&quot;,
+         &quot;10.0.0.2:6789&quot;
+       ]
+     }
+   ]
+metadata:
+ name: ceph-csi-config
+</code></pre></div>
+<p>编辑 cephfs/secret.yaml，填入上面创建的用户名和 key 值，除此之外的其他项可以删除，示例如下：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: v1
+kind: Secret
+metadata:
+ name: csi-cephfs-secret
+ namespace: default
+stringData:
+ # Required for dynamically provisioned volumes
+ adminID: demo-user
+ adminKey: AQB7JL5jugJwFxAA+szhrjIi48JhJbZsI3feRg==
+</code></pre></div>
+<p>编辑 cephfs/storageclass.yaml，填入上面的 fsid 和 Ceph File System 名称，示例如下：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+ name: sc-cephfs
+provisioner: cephfs.csi.ceph.com
+parameters:
+ clusterID: 47f20cbc-914f-24ed-93dc-9f2800951ba2
+ fsName: demo-fs
+ csi.storage.k8s.io/provisioner-secret-name: csi-cephfs-secret
+ csi.storage.k8s.io/provisioner-secret-namespace: default
+ csi.storage.k8s.io/controller-expand-secret-name: csi-cephfs-secret
+ csi.storage.k8s.io/controller-expand-secret-namespace: default
+ csi.storage.k8s.io/node-stage-secret-name: csi-cephfs-secret
+ csi.storage.k8s.io/node-stage-secret-namespace: default
+reclaimPolicy: Delete
+allowVolumeExpansion: true
+mountOptions:
+ - debug
+</code></pre></div>
+<p>按照 README.md 中的指引，执行以下命令在 K8s 集群中依次创建所需资源：</p>
+<div class="highlight"><pre><span></span><code>kubectl apply -f ./ceph-conf.yaml
+kubectl apply -f ./csi-config-map-sample.yaml
+kubectl apply -f ./cephfs/secret.yaml
+kubectl apply -f ./cephfs/storageclass.yaml
+cd ../../deploy/cephfs/kubernetes
+kubectl create -f ./csi-provisioner-provisioner.yaml
+kubectl create -f ./csi-nodeplugin-rbac.yaml
+kubectl create -f ./csi-cephfsplugin-provisioner.yaml
+kubectl create -f ./csi-cephfsplugin.yaml
+kubectl create -f ./csidriver.yaml
+</code></pre></div>
+<p>注意，上述资源均默认在 default namespace 中创建。</p>
+<p>等待所创建的 Pod 成功运行后，即可创建基于 Ceph 的 PVC。</p>
+<div class="highlight"><pre><span></span><code>kubectl get pod -w
+</code></pre></div>
+<h2 id="通过-helm-chart-配置-ceph-csi">通过 Helm Chart 配置 Ceph CSI<a class="headerlink" href="#通过-helm-chart-配置-ceph-csi" title="Permanent link">&para;</a></h2>
+<p>理论上，我们可以在同一个 K8s 集群中部署两套 Ceph CSI，提供两个 Storage Class 以供用户使用。</p>
+<p>在部署过程中：</p>
+<ul>
+<li>对于 Ceph 集群，我们需要创建两个不同的 Ceph Filesystem 及对应的用户</li>
+<li>对于 K8s 集群，我们需要创建两个不同的命名空间，并对 Storage Class、ClusterRole、ClusterRoleBinding 等集群级别资源使用不同的名称</li>
+</ul>
+<p>为了方便部署，我们提供了 Helm Chart（点击<a href="assets/k8s/cephcsi-helmchart.zip">此处</a>下载），您只需要在 values.yaml 中填写参数即可。</p>
+<p>values.yaml 示例如下：</p>
+<div class="highlight"><pre><span></span><code>ceph:
+  storageClassName: sc-cephfs
+  driverName: cephfs.csi.ceph.com
+  clusterID: 47f20cbc-914f-24ed-93dc-9f2800951ba2
+  fsName: demo-fs
+  adminID: demo-user
+  adminKey: AQAhuZBjSuS9AxBD77AvVjr+vAg9zhjRK7NR+g==
+  metricsPort: 8681
+  monitors:
+    - &quot;10.0.0.1:6789&quot;
+    - &quot;10.0.0.2:6789&quot;
+  # erasureCode: true
+  # pool: ecpool-k4-m2
+  images:
+    cephCSI: quay.io/cephcsi/cephcsi:v3.8.0
+    csiProvisioner: registry.k8s.io/sig-storage/csi-provisioner:v3.3.0
+    csiResizer: registry.k8s.io/sig-storage/csi-resizer:v1.6.0
+    csiSnapshotter: registry.k8s.io/sig-storage/csi-snapshotter:v6.1.0
+    csiNodeDriverRegistrar: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.6.2
+</code></pre></div>
+<p>运行以下命令在 K8s 集群中创建相关资源：</p>
+<div class="highlight"><pre><span></span><code>unzip cephcsi-helmchart.zip
+helm template ./cephcsi-helmchart -n cephfs -o ./deploy.yaml
+kubectl create ns cephfs
+kubectl create -n cephfs -f ./deploy.yaml
+kubectl get pod -n cephfs -w
+</code></pre></div>
+<h2 id="创建-pvc-并绑定-pod">创建 PVC 并绑定 Pod<a class="headerlink" href="#创建-pvc-并绑定-pod" title="Permanent link">&para;</a></h2>
+<p>在 PVC spec 中指定 StorageClass 名称即可创建基于 Ceph 存储集群的 PVC。例如，<a href="#配置-ceph-csi">配置 Ceph CSI</a> 一节中创建了名为 sc-cephfs 的 Storage Class，通过如下 YAML 创建 PVC：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cephfs-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: sc-cephfs
+</code></pre></div>
+<p>然后创建 Pod 绑定该 PVC：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: v1
+kind: Pod
+metadata:
+ name: cephfs-demo-pod
+spec:
+ containers:
+   - name: web-server
+     image: nginx:latest
+     resources:
+       limits:
+         cpu: 100m
+         memory: 200Mi
+     volumeMounts:
+       - name: cephfs-pvc
+         mountPath: /var/lib/www
+ volumes:
+   - name: cephfs-pvc
+     persistentVolumeClaim:
+       claimName: cephfs-pvc
+</code></pre></div>
+<h2 id="查看-pvc-创建绑定失败原因">查看 PVC 创建/绑定失败原因<a class="headerlink" href="#查看-pvc-创建绑定失败原因" title="Permanent link">&para;</a></h2>
+<p>如果创建 PVC 和 Pod 后，Pod 一直无法正常运行，请按照以下步骤查找原因：</p>
+<p><strong>1. 查看 PVC 是否创建成功</strong></p>
+<p>运行以下命令获取 PVC 信息：</p>
+<div class="highlight"><pre><span></span><code>kubectl get pvc cephfs-pvc
+</code></pre></div>
+<p>如果 STATUS 字段是 Bound，则转至第 2 步。</p>
+<p>如果 STATUS 字段是 Pending，说明 PVC 没有 provision 成功，请查看 Ceph CSI Provisioner Pod 的日志寻找原因。</p>
+<p>通过以下命令获取 Ceph CSI Provisioner Pod 名称：</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pod -n cephfs -l app=csi-cephfsplugin-provisioner
+NAME                                            READY   STATUS    RESTARTS   AGE
+csi-cephfsplugin-provisioner-5b77dc5fff-56mr9   6/6     Running   0          6d21h
+csi-cephfsplugin-provisioner-5b77dc5fff-rcpbg   6/6     Running   0          6d21h
+csi-cephfsplugin-provisioner-5b77dc5fff-tkmsh   6/6     Running   0          6d21h
+</code></pre></div>
+<p>其中只有一个 Pod 是主要的工作 Pod，另外两个处于待命状态。通过以下命令查看其日志：</p>
+<div class="highlight"><pre><span></span><code>kubectl logs -n cephfs csi-cephfsplugin-provisioner-5b77dc5fff-56mr9 csi-provisioner
+</code></pre></div>
+<p><strong>2. 查看 PVC 与 Pod 是否绑定成功</strong></p>
+<p>运行以下命令获取 Pod 信息：</p>
+<div class="highlight"><pre><span></span><code>kubectl describe pod cephfs-demo-pod
+</code></pre></div>
+<p>输出结果中的 Events 字段会显示 PVC 绑定不成功的原因。</p>
+<p>另外，查看 Ceph CSI Plugin Pod 日志也有助于查找原因。</p>
+<p>首先，通过以下命令查看所创建的 Pod 位于哪个节点上：</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pod -o wide
+NAME              READY   STATUS    RESTARTS   AGE     IP               NODE
+cephfs-demo-pod   1/1     Running   0          6d22h   10.233.106.203   nc13
+</code></pre></div>
+<p>然后，通过以下命令找到位于同一个节点上的 Ceph CSI Plugin Pod：</p>
+<div class="highlight"><pre><span></span><code>$ kubectl get pod -n cephfs -l app=csi-cephfsplugin -o wide
+NAME                     READY   STATUS    RESTARTS   AGE    IP             NODE
+csi-cephfsplugin-55nc4   3/3     Running   0          3d1h   100.64.4.74    nc14
+csi-cephfsplugin-dd99m   3/3     Running   0          3d1h   100.64.4.199   nuc
+csi-cephfsplugin-jcxv6   3/3     Running   0          3d1h   100.64.4.71    nc11
+csi-cephfsplugin-jf4mn   3/3     Running   0          3d1h   100.64.4.209   acer
+csi-cephfsplugin-jhffm   3/3     Running   0          3d1h   10.0.0.2    e01
+csi-cephfsplugin-mxjh2   3/3     Running   0          3d1h   100.64.4.73    nc13
+csi-cephfsplugin-rdbbp   3/3     Running   0          3d1h   100.64.4.72    nc12
+csi-cephfsplugin-vql6n   3/3     Running   0          3d1h   100.64.4.132   kylin
+</code></pre></div>
+<p>最后，通过以下命令查看该 Ceph CSI Plugin Pod 的日志：</p>
+<div class="highlight"><pre><span></span><code>kubectl logs -n cephfs csi-cephfsplugin-mxjh2 csi-cephfsplugin
+</code></pre></div>
+<p>如果仍然无法找到问题原因，可尝试重启该 Ceph CSI Plugin Pod：</p>
+<div class="highlight"><pre><span></span><code>kubectl delete -n cephfs csi-cephfsplugin-mxjh2
+</code></pre></div>
+<p>如果上述删除命令卡住，可通过以下命令强行删除该 Ceph CSI Plugin Pod：</p>
+<div class="highlight"><pre><span></span><code>kubectl delete -n cephfs csi-cephfsplugin-mxjh2 --force
+</code></pre></div>
+<h2 id="pvc-备份">PVC 备份<a class="headerlink" href="#pvc-备份" title="Permanent link">&para;</a></h2>
+<p>为了支持 PVC 备份，首先需要<a href="#在-k8s-中启用-volume-snapshot-功能">在 K8s 中启用 Volume Snapshot 功能</a>；其次，需要针对不同的 PVC Provisioner 创建 <a href="https://kubernetes.io/docs/concepts/storage/volume-snapshot-classes/">VolumeSnapshotClass</a>。</p>
+<p>Ceph CSI 提供了对应的 VolumeSnapshotClass 资源，其 YAML 如下（<a href="https://github.com/ceph/ceph-csi/blob/devel/examples/cephfs/snapshotclass.yaml">来源</a>）：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+ name: csi-cephfsplugin-snapclass
+driver: cephfs.csi.ceph.com
+parameters:
+ # String representing a Ceph cluster to provision storage snapshot from.
+ # Should be unique across all Ceph clusters in use for provisioning,
+ # cannot be greater than 36 bytes in length, and should remain immutable for
+ # the lifetime of the StorageClass in use.
+ # Ensure to create an entry in the configmap named ceph-csi-config, based on
+ # csi-config-map-sample.yaml, to accompany the string chosen to
+ # represent the Ceph cluster in clusterID below
+ clusterID: 47f20cbc-914f-24ed-93dc-9f2800951ba2
+
+ # Prefix to use for naming CephFS snapshots.
+ # If omitted, defaults to &quot;csi-snap-&quot;.
+ # snapshotNamePrefix: &quot;foo-bar-&quot;
+
+ csi.storage.k8s.io/snapshotter-secret-name: csi-cephfs-secret
+ csi.storage.k8s.io/snapshotter-secret-namespace: default
+deletionPolicy: Delete
+</code></pre></div>
+<p>与<a href="#配置-ceph-csi">配置 Ceph CSI</a> 一节类似，YAML 中需要填入 Ceph File System 的 fsid。</p>
+<p>针对<a href="#创建-pvc-并绑定-pod">创建 PVC 并绑定 Pod</a> 一节中所创建的名为 cephfs-pvc 的 PVC，我们创建一个 <a href="https://kubernetes.io/docs/concepts/storage/volume-snapshots/">VolumeSnapshot</a> 来对其进行备份，YAML 如下（<a href="https://github.com/ceph/ceph-csi/blob/devel/examples/cephfs/snapshot.yaml">来源</a>）：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+ name: cephfs-pvc-snapshot
+spec:
+ volumeSnapshotClassName: csi-cephfsplugin-snapclass
+ source:
+   persistentVolumeClaimName: cephfs-pvc
+</code></pre></div>
+<p>查看所创建的备份：</p>
+<div class="highlight"><pre><span></span><code>kubectl describe volumesnapshot cephfs-pvc-snapshot
+</code></pre></div>
+<p>基于该备份创建一个新的 PVC：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: cephfs-pvc-restore
+spec:
+ storageClassName: tsz-cephfs
+ dataSource:
+   name: cephfs-pvc-snapshot
+   kind: VolumeSnapshot
+   apiGroup: snapshot.storage.k8s.io
+ accessModes:
+   - ReadWriteMany
+ resources:
+   requests:
+     storage: 1Gi
+</code></pre></div>
+<p>然后创建一个新的 Pod 绑定该 PVC：</p>
+<div class="highlight"><pre><span></span><code>apiVersion: v1
+kind: Pod
+metadata:
+ name: cephfs-restore-demo-pod
+spec:
+ containers:
+   - name: web-server
+     image: nginx:latest
+     resources:
+       limits:
+         cpu: 100m
+         memory: 200Mi
+     volumeMounts:
+       - name: cephfs-pvc-restore
+         mountPath: /var/lib/www
+ volumes:
+   - name: cephfs-pvc-restore
+     persistentVolumeClaim:
+       claimName: cephfs-pvc-restore
+</code></pre></div>
+<p>最后，进入 Pod 查看 PVC 中的内容是否与之前相同：</p>
+<div class="highlight"><pre><span></span><code>kubectl exec -it cephfs-restore-demo-pod -- /bin/bash
+ls /var/lib/www
+</code></pre></div>
+<h3 id="在-k8s-中启用-volume-snapshot-功能">在 K8s 中启用 Volume Snapshot 功能<a class="headerlink" href="#在-k8s-中启用-volume-snapshot-功能" title="Permanent link">&para;</a></h3>
+<p>根据<a href="https://kubernetes.io/blog/2020/12/10/kubernetes-1.20-volume-snapshot-moves-to-ga/">官方博客</a>，Volume Snapshot 特性从 K8s 1.20 版本开始 GA。</p>
+<p>通过以下命令查看 K8s 版本：</p>
+<div class="highlight"><pre><span></span><code>kubectl version
+</code></pre></div>
+<p>通过以下命令查看 K8s 中是否已经安装 Volume Snapshot 相关组件：</p>
+<div class="highlight"><pre><span></span><code>kubectl get deploy -n kube-system snapshot-controller
+kubectl api-resouces | grep volumesnapshot
+</code></pre></div>
+<p>如果尚未安装，可以根据<a href="https://github.com/kubernetes-csi/external-snapshotter#usage">官方文档</a>，手动安装 CRD、controller、webhook 等组件：</p>
+<div class="highlight"><pre><span></span><code>git clone https://github.com/kubernetes-csi/external-snapshotter.git
+cd external-snapshotter
+kubectl kustomize client/config/crd | kubectl create -f -
+kubectl -n kube-system kustomize deploy/kubernetes/snapshot-controller | kubectl create -f -
+</code></pre></div>
+<h2 id="配额管理">配额管理<a class="headerlink" href="#配额管理" title="Permanent link">&para;</a></h2>
+<p>PVC 能够使用的最大存储空间由其 spec 指定，K8s 集群中所有基于 Ceph 的 PVC 总共能够使用的最大存储空间可通过 Ceph File System 的底层 Pool 来限制。</p>
+<p>在任意管理节点上运行以下命令列举所有 Pool：</p>
+<div class="highlight"><pre><span></span><code>$ sudo ceph osd pool ls
+.mgr
+cephfs.demo-fs.meta
+cephfs.demo-fs.data
+</code></pre></div>
+<p>其中，名为 <code>cephfs.demo-fs.data</code> 的 Pool 就是名为 demo-fs 的 Ceph File System 存储数据的 Pool，通过以下命令限制该 Pool 能够使用的最大存储空间：</p>
+<div class="highlight"><pre><span></span><code>sudo ceph osd pool set-quota cephfs.demo-fs.data max_bytes 10000000
+</code></pre></div>
+<p>参考文档：</p>
+<ul>
+<li><a href="https://docs.ceph.com/en/quincy/rados/operations/pools/#set-pool-quotas">Ceph - Set Pool Quotas</a></li>
+<li><a href="https://docs.ceph.com/en/quincy/cephfs/quota/#quotas">Ceph - Quotas</a></li>
+</ul>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      最后更新:
+      2023-08-07
+    
+  </small>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            回到页面顶部
+          </button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2018 - 2023 TensorStack
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.indexes", "navigation.sections", "navigation.tabs", "navigation.top", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+        
+          <script src="javascripts/mathjax.js"></script>
+        
+      
+        
+          <script src="javascripts/tex-mml-chtml.js"></script>
+        
+      
+    
+  </body>
+</html>
