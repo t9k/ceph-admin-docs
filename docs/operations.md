@@ -7,7 +7,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard1" src="./assets/operations/dashboard1.png"/>
+    <img alt="dashboard1" src="./assets/operations/dashboard1.png" class="screenshot"/>
 </figure>
 
 
@@ -16,7 +16,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard2" src="./assets/operations/dashboard2.png"/>
+    <img alt="dashboard2" src="./assets/operations/dashboard2.png" class="screenshot"/>
 </figure>
 
 
@@ -24,7 +24,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard3" src="./assets/operations/dashboard3.png"/>
+    <img alt="dashboard3" src="./assets/operations/dashboard3.png" class="screenshot"/>
 </figure>
 
 
@@ -32,7 +32,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard4" src="./assets/operations/dashboard4.png"/>
+    <img alt="dashboard4" src="./assets/operations/dashboard4.png" class="screenshot"/>
 </figure>
 
 
@@ -41,7 +41,7 @@ Ceph 提供了完善的 Web UI 来查看和操作集群中的各项服务。首�
 
 
 <figure class="screenshot">
-    <img alt="dashboard5" src="./assets/operations/dashboard5.png"/>
+    <img alt="dashboard5" src="./assets/operations/dashboard5.png" class="screenshot"/>
 </figure>
 
 
@@ -100,14 +100,14 @@ sudo journalctl -u ceph-osd@0.service
 
 
 <figure class="screenshot">
-    <img alt="alert1" src="./assets/operations/alert1.png"/>
+    <img alt="alert1" src="./assets/operations/alert1.png" class="screenshot"/>
 </figure>
 
 
 如果确认警告信息无关紧要，您可以静默警告信息。首先在表格中点击所要静默的行，然后点击左上角的 Create Silence 按钮，填写静默时长和筛选条件等配置即可。
 
 <figure class="screenshot">
-    <img alt="alert2" src="./assets/operations/alert2.png"/>
+    <img alt="alert2" src="./assets/operations/alert2.png" class="screenshot"/>
 </figure>
 
 

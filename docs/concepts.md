@@ -5,7 +5,7 @@
 Ceph 架构如下图所示：
 
 <figure class="screenshot">
-    <img alt="architecture" src="./assets/concepts/architecture.png"/>
+    <img alt="architecture" src="./assets/concepts/architecture.png" class="screenshot"/>
 </figure>
 
 在底层 RADOS (Reliable, Autonomic Distributed Object Store) 存储服务的支撑下，Ceph 对外提供三种接口：
@@ -29,7 +29,7 @@ Ceph 主要有以下组件：
 
 
 <figure class="screenshot">
-    <img alt="client" src="./assets/concepts/client.png"/>
+    <img alt="client" src="./assets/concepts/client.png" class="screenshot"/>
 </figure>
 
 客户端与 Ceph 通信的步骤如上图所示：
@@ -45,7 +45,7 @@ Ceph 主要有以下组件：
 RADOS 存储数据以 object 为单位，每个 RADOS object 由 ID、二进制数据、元数据组成：
 
 <figure class="screenshot">
-    <img alt="object" src="./assets/concepts/object.png"/>
+    <img alt="object" src="./assets/concepts/object.png" class="screenshot"/>
 </figure>
 
 其中：
@@ -57,7 +57,7 @@ RADOS 存储数据以 object 为单位，每个 RADOS object 由 ID、二进制�
 下图展示了一个文件存入 RADOS 的具体原理：
 
 <figure class="screenshot">
-    <img alt="flow" src="./assets/concepts/flow.png"/>
+    <img alt="flow" src="./assets/concepts/flow.png" class="screenshot"/>
 </figure>
 
 当一个文件需要存入 RADOS 时，
